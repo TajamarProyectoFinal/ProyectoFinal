@@ -1,0 +1,6 @@
+@NickYMartinApi_HostAddress = http://localhost:5199
+
+GET {{NickYMartinApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
