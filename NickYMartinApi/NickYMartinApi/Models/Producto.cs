@@ -14,5 +14,8 @@ namespace NickYMartinApi.Models
         public int Stock { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
+
+        public virtual IEnumerable<Valoracion> Valoraciones { get; set; }
+        public virtual IEnumerable<Comentario> Comentarios { get; set; }
     }
 }
