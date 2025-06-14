@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("DefaultConnection");
+string connectionString = !string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection")) ? builder.Configuration.GetConnectionString("DefaultConnection") : Environment.GetEnvironmentVariable("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));

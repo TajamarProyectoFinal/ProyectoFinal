@@ -16,7 +16,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DefaultConnection": ""
+        "DefaultConnection": "Data Source=DESKTOP-IBJ8VG1\\\\SQLEXPRESS;Initial Catalog=NickYMartinDB;User ID=sa;Password=DEV2024;Encrypt=False"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7009;http://localhost:5070"
