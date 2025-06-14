@@ -32,7 +32,7 @@ namespace NickYMartinApi.Repositories
             }
         }
 
-        public async Task<bool> ClearCarritoItems(string userId)
+        public async Task<bool> ClearCarritoItems(Guid userId)
         {
             bool response = false;
             Carrito? carrito = await GetUserCarrito(userId);
@@ -54,7 +54,7 @@ namespace NickYMartinApi.Repositories
             return carrito;
         }
 
-        public async Task<bool> DeleteUserCarrito(string userId)
+        public async Task<bool> DeleteUserCarrito(Guid userId)
         {
             Carrito? carrito = await GetUserCarrito(userId);
             bool response = false;
@@ -67,7 +67,7 @@ namespace NickYMartinApi.Repositories
             return response;
         }
 
-        public async Task<ItemCarrito?> GetItemCarrito(string userId, Guid idItemCarrito)
+        public async Task<ItemCarrito?> GetItemCarrito(Guid userId, Guid idItemCarrito)
         {
             Carrito? carrito = await GetUserCarrito(userId);
             ItemCarrito? itemcarrito = null;
@@ -79,14 +79,14 @@ namespace NickYMartinApi.Repositories
             return itemcarrito;
         }
 
-        public async Task<Carrito?> GetUserCarrito(string userId)
+        public async Task<Carrito?> GetUserCarrito(Guid userId)
         {
             Carrito? carrito = await _context.Carritos.FirstOrDefaultAsync(c => c.IdUsuario == userId);
 
             return carrito;
         }
 
-        public async Task<bool> RemoveItemCarrito(string userId, Guid idItemCarrito)
+        public async Task<bool> RemoveItemCarrito(Guid userId, Guid idItemCarrito)
         {
             Carrito? carrito = await GetUserCarrito(userId);
             bool response = false;

@@ -12,7 +12,7 @@ namespace NickYMartinApi.Services
             _carritoRepository = carritoRepository;
         }
 
-        public async Task<Carrito> CreateOrAddUserCarrito(string userId, ItemCarrito itemCarrito)
+        public async Task<Carrito> CreateOrAddUserCarrito(Guid userId, ItemCarrito itemCarrito)
         {
             Carrito? carrito = await GetUserCarrito(userId);
 
@@ -35,28 +35,28 @@ namespace NickYMartinApi.Services
             return carrito;
         }
 
-        public async Task<Carrito?> GetUserCarrito(string userId)
+        public async Task<Carrito?> GetUserCarrito(Guid userId)
         {
             Carrito? carrito = await _carritoRepository.GetUserCarrito(userId);            
 
             return carrito;
         }
 
-        public async Task<bool> RemoveItemCarrito(string userId, Guid idItemCarrito)
+        public async Task<bool> RemoveItemCarrito(Guid userId, Guid idItemCarrito)
         {
             bool response = await _carritoRepository.RemoveItemCarrito(userId, idItemCarrito);
 
             return response;
         }
 
-        public async Task<bool> DeleteUserCarrito(string userId)
+        public async Task<bool> DeleteUserCarrito(Guid userId)
         {
             bool response = await _carritoRepository.DeleteUserCarrito(userId);
 
             return response;
         }
 
-        public async Task<bool> ClearCarritoItems(string userId)
+        public async Task<bool> ClearCarritoItems(Guid userId)
         {
             bool response = await _carritoRepository.ClearCarritoItems(userId);
 
