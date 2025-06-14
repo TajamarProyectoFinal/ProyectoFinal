@@ -6,12 +6,12 @@ namespace NickYMartinApi.Models
     public class Favorito
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey(nameof(Usuario))]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public User Usuario { get; set; }
         [ForeignKey(nameof(Producto))]
-        public int ProductoId { get; set; }
+        public Guid ProductoId { get; set; }
         public Producto Producto { get; set; }
     }
 }

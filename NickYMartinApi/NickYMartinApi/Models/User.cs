@@ -1,10 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NickYMartinApi.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+
+        public string? Name { get; set; }
+        public string? Phone { get; set; }
 
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
@@ -12,8 +17,10 @@ namespace NickYMartinApi.Models
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
 
-        public string Role { get; set; } = "User"; // User, Admin, etc.
+        [ForeignKey(nameof(Role))]
+        public Guid RoleId { get; set; }
 
+        public virtual Role? Role { get; set; } 
         public virtual IEnumerable<Direccion> Direcciones { get; set; } = new List<Direccion>();
 
         public virtual IEnumerable<Favorito> Favoritos { get; set; }

@@ -10,7 +10,7 @@ namespace NickYMartinApi.Models
         public Guid IdPedido { get; set; }
         public int Numero { get; set; }
         [ForeignKey(nameof(Usuario))]
-        public string? IdUsuario { get; set; }
+        public Guid? IdUsuario { get; set; }
         public virtual User? Usuario { get; set; }
         [ForeignKey(nameof(Direccion))]
         public Guid IdDireccion { get; set; }

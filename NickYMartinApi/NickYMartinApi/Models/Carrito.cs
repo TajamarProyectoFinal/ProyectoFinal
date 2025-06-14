@@ -9,7 +9,7 @@ namespace NickYMartinApi.Models
         [Key]
         public Guid IdCarrito { get; set; }
         [ForeignKey(nameof(Usuario))]
-        public string? IdUsuario { get; set; }
+        public Guid? IdUsuario { get; set; }
         public virtual User? Usuario { get; set; }
         public DateTime FechaCreacion { get; set; }
         public virtual ICollection<ItemCarrito>? ItemsCarrito { get; set; }
