@@ -396,4 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-./NickYMartinApi/NickYMartinApi/Properties/launchSettings.json
+/NickYMartinApi/NickYMartinApi/Properties/launchSettings.json
