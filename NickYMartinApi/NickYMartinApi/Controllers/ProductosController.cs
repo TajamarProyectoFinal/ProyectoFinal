@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NickYMartinApi.Enums;
 using NickYMartinApi.Interfaces;
 using NickYMartinApi.Models;
 using NickYMartinApi.ViewModels;
@@ -21,13 +22,18 @@ namespace NickYMartinApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(ProductosViewModel productosVm)
+        public async Task<IActionResult> Index(
+            [FromQuery] SearchTypes searchType,
+            [FromQuery] ProductosFilters? filters,
+            [FromQuery] int currentPage = 1,
+            [FromQuery] int resultsPerPage = 10
+        )
         {
             ProductosViewModel vm = await _productoService.GetProductos(
-                                            productosVm.SearchTypes,
-                                            productosVm.Filters,
-                                            productosVm.CurrentPage,
-                                            productosVm.ResultsPerPage);
+                                            searchType,
+                                            filters,
+                                            currentPage,
+                                            resultsPerPage);
 
             return Ok(vm);
         }
