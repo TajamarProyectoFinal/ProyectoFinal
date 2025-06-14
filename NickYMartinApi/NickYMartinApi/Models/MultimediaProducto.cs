@@ -6,7 +6,7 @@ namespace NickYMartinApi.Models
     public class MultimediaProducto
     {
         [Key]
-        public int IdMultimedia { get; set; }
+        public Guid IdMultimedia { get; set; }
         [ForeignKey(nameof(Producto))]
         public Guid IdProducto { get; set; }
         public virtual Producto? Producto { get; set; }
