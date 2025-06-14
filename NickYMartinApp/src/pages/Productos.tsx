@@ -1,28 +1,45 @@
 // src/pages/Productos.tsx
 import React, { useEffect, useState } from "react";
-import productService from "../services/productService";
-import type { Producto } from "../components/ProductCard";
 import ProductCard from "../components/ProductCard";
+import { ProductosDataSource } from "../services/ProductosDataSource";
+import type { Producto } from "../types/product";
+
+const productosApi = new ProductosDataSource("https://localhost:7009/api/Productos");
 
 const Productos: React.FC = () => {
     const [productos, setProductos] = useState<Producto[]>([]);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
-        productService.GetProducts((data: Producto[] | null, error: any) => {
-            if (error) {
-                console.error("Error al cargar productos", error);
-            } else if (data) {
-                setProductos(data);
+        productosApi.GetProductos(page, 6, (data) => {
+            if (data) {
+                setProductos(data.productos || []);
+                setTotal(data.totalResults);
             }
         });
-    }, []);
+    }, [page]);
 
     return (
         <div className="p-8">
             <h1 className="text-2xl font-bold mb-6">Catálogo de productos</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {productos.map((producto) => (
-                    <ProductCard key={producto.id} producto={producto} />
+                    <ProductCard key={producto.idProducto} producto={producto} />
+                ))}
+            </div>
+
+            {/* Paginación */}
+            <div className="flex justify-center mt-8">
+                {Array.from({ length: Math.ceil(total / 6) }).map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setPage(i + 1)}
+                        className={`mx-1 px-3 py-1 border ${page === i + 1 ? "bg-blue-600 text-white" : ""
+                            }`}
+                    >
+                        {i + 1}
+                    </button>
                 ))}
             </div>
         </div>
