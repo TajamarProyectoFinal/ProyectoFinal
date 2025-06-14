@@ -396,21 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-Azure/dotnet/ProcessImage/local.settings.json
-Azure/CarMakeAPI/CarMakeAPI/Properties/launchSettings.json
-Azure/CosmosToDo/CosmosToDo/Properties/launchSettings.json
-/Tareas/Azure/MartinSanchezCosmosDB/CosmosDBCategoriesAPI/CosmosDBCategoriesAPI/Properties/launchSettings.json
-/Tareas/Azure/6 - Authentication/Ejemplo/NewWebAppLocal/NewWebAppLocal/Properties/launchSettings.json
-/Tareas/Azure/6 - Authentication/EjAzureAutenticacion/EjAzureAutenticacion/Properties/launchSettings.json
-/Azure/JWT/NewWebApplicationLocal/NewWebApplicationLocal/Properties/launchSettings.json
-/Azure/ServiceBus/ServicesBusApp/ServicesBusApp/Properties/launchSettings.json
-/Azure/RedisCache/tercerProyectoRedis/tercerProyectoRedis/wwwroot/launchSettings.json
-/Azure/Insights/ApplicationInsightsTutorial/ApplicationInsightsTutorial/Properties/launchSettings.json
-/Azure/RedisCache/PrimerProyectoCache/PrimerProyectoCache/Properties/launchSettings.json
-/Azure/RedisCache/SegundoProyectoRedis/SegundoProyectoRedis/Properties/launchSettings.json
-/Azure/RedisCache/tercerProyectoRedis/tercerProyectoRedis/Properties/launchSettings.json
-/Azure/Insights/AplicationInsightsTutorial2/AplicationInsightsTutorial2/Properties/launchSettings.json
-/NickYMartinApi/NickYMartinApi/Properties/launchSettings.json
-/NickYMartinApi/NickYMartinApi/Properties/launchSettings.json
-/NickYMartinApi/NickYMartinApi/Properties/launchSettings.json
 /NickYMartinApi/NickYMartinApi/Properties/launchSettings.json
