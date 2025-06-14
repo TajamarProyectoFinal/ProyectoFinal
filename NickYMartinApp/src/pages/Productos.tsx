@@ -2,17 +2,18 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { ProductosDataSource } from "../services/ProductosDataSource";
-import type { Producto } from "../types/product";
+import type { ProductosCategorias } from "../types/product";
 
-const productosApi = new ProductosDataSource("https://localhost:7009/api/Productos");
+const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
 
 const Productos: React.FC = () => {
-    const [productos, setProductos] = useState<Producto[]>([]);
+    const [productos, setProductos] = useState<ProductosCategorias[]>([]);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
 
     useEffect(() => {
-        productosApi.GetProductos(page, 6, (data) => {
+        productosApi.GetData(page, 6, (data) => {
+            console.log("Data: ", data)
             if (data) {
                 setProductos(data.productos || []);
                 setTotal(data.totalResults);
@@ -25,7 +26,7 @@ const Productos: React.FC = () => {
             <h1 className="text-2xl font-bold mb-6">Catálogo de productos</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {productos.map((producto) => (
-                    <ProductCard key={producto.idProducto} producto={producto} />
+                    <ProductCard key={producto.producto.idProducto} producto={producto.producto} />
                 ))}
             </div>
 
