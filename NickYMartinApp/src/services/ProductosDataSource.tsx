@@ -23,9 +23,9 @@ export class ProductosDataSource {
         
 
         const params = new URLSearchParams({
-            CurrentPage: String(page),
-            ResultsPerPage: String(resultsPerPage),
-            SearchTypes: String(SearchTypes.List)
+            currentPage: String(page),
+            resultsPerPage: String(resultsPerPage),
+            searchType: String(SearchTypes.List)
         });
         Object.entries(this.filtros).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
