@@ -18,10 +18,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
                     <p className="card-text">{producto.descripcion}...</p>
                 )}
                 <p className="card-text mt-auto">
-                    <strong>Precio: ${producto.precio.toFixed(2)}</strong>
+                    <strong>Precio: {producto.precio.toFixed(2)}€</strong>
                 </p>
                 <button className="btn btn-primary mt-2">
-                    A�adir al carrito
+                    Añadir al carrito
                 </button>
             </div>
         </div>
