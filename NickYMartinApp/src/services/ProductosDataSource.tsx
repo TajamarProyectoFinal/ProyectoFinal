@@ -7,27 +7,26 @@ type ApiCallback<T> = (data: T | null, error?: any) => void;
 
 export class ProductosDataSource {
     private BASE_URL: string;
-    private filtros!: ProductosFilters;
 
     constructor(base_url: string) {
         this.BASE_URL = base_url;
     }
 
-
     // Obtener productos paginados
     GetData(
         page: number,
         resultsPerPage: number,
+        filtros: ProductosFilters,        
+        searchType: SearchTypes = SearchTypes.List,
         callback: ApiCallback<ProductosViewModel>
-    ) {
-        
-
+    ) {       
         const params = new URLSearchParams({
             currentPage: String(page),
             resultsPerPage: String(resultsPerPage),
-            searchType: String(SearchTypes.List)
+            searchType: String(searchType),
         });
-        Object.entries(this.filtros).forEach(([key, value]) => {
+
+        Object.entries(filtros).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
                 params.append(`filters.${key}`, String(value));
             }

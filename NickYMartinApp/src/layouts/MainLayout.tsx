@@ -1,25 +1,55 @@
+// src/MainLayout.tsx
 import React from "react";
-import { Outlet } from "react-router-dom";
+// Ya no necesitas importar BrowserRouter aquí
+import { Route, Routes, Link } from "react-router-dom"; // Sigue importando Route, Routes, Link
+import Productos from "../pages/Productos"; // Asegúrate de que la ruta sea correcta
 
 const MainLayout: React.FC = () => {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="d-flex flex-column min-vh-100">
             {/* Navbar */}
-            <header className="bg-white shadow p-4 flex justify-between items-center">
-                <h1 className="text-xl font-bold">Nickymartin</h1>
-                <nav className="space-x-4">
-                    <a href="/" className="text-blue-600">Inicio</a>
-                    <a href="/carrito" className="text-blue-600">Carrito</a>
+            <header>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                    <div className="container-fluid">
+                        {/* Estos Links ahora están dentro del BrowserRouter global */}
+                        <Link className="navbar-brand fw-bold" to="/">Nickymartin</Link>
+                        <button
+                            className="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav"
+                            aria-controls="navbarNav"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                        >
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarNav">
+                            <ul className="navbar-nav ms-auto">
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/">Inicio</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/carrito">Carrito</Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </nav>
             </header>
 
             {/* Contenido */}
-            <main className="flex-1 p-6 bg-gray-50">
-                <Outlet />
+            <main className="flex-grow-1 py-4 bg-light">
+                {/* Routes y Route deben estar dentro del BrowserRouter global */}
+                <Routes>
+                    <Route path="/" element={<Productos />} />
+                    {/* Agrega más rutas aquí si es necesario */}
+                    {/* <Route path="/carrito" element={<Carrito />} /> */}
+                </Routes>
             </main>
 
             {/* Footer */}
-            <footer className="bg-gray-200 text-center p-4 text-sm">
+            <footer className="bg-light text-center py-3 text-muted border-top">
                 © 2025 Nickymartin. Todos los derechos reservados.
             </footer>
         </div>
