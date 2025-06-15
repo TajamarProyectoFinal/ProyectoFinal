@@ -5,10 +5,7 @@ import Productos from "./pages/Productos.js";
 function App() {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<MainLayout />} />
-                <Route path="/" element={<Productos />} />
-            </Routes>
+            <MainLayout />        
         </BrowserRouter>
     );
 }
