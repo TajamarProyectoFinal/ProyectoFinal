@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { ProductosDataSource } from "../services/ProductosDataSource";
-import type { ProductosCategorias, ProductosViewModel } from "../types/product";
+import type { ProductosCategorias } from "../types/product";
 import { SearchTypes } from "../types/SearchTypes";
-import AgregarProductoForm from "../components/AgregarProducto";
-import { Modal } from 'bootstrap';
-
-
+import AgregarProductoForm from "../components/AgregarProductoForm";
 
 const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
-
 
 const Productos: React.FC = () => {
     const [productos, setProductos] = useState<ProductosCategorias[]>([]);
@@ -51,7 +47,6 @@ const Productos: React.FC = () => {
         <>
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Catálogo de productos</h1>
-                {/* Botón para abrir modal */}
                 <button
                     className="btn btn-success"
                     data-bs-toggle="modal"
@@ -63,7 +58,7 @@ const Productos: React.FC = () => {
 
             {/* Modal Bootstrap */}
             <div className="modal fade" id="modalAgregarProducto" tabIndex={-1} aria-labelledby="modalAgregarProductoLabel" aria-hidden="true">
-                <div className="modal-dialog modal-lg">
+                <div className="modal-dialog modal-dialog-centered modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="modalAgregarProductoLabel">Nuevo producto</h5>
@@ -71,12 +66,8 @@ const Productos: React.FC = () => {
                         </div>
                         <div className="modal-body">
                             <AgregarProductoForm
-                                onProductoCreado={() => {
-                                    fetchProductos();
-                                    const modalEl = document.getElementById('modalAgregarProducto');
-                                    const modal = Modal.getInstance(modalEl!) || new Modal(modalEl!);
-                                    modal?.hide();
-                                }}
+                                onClose={() => { }} // ya no necesario realmente, pero puedes usarlo si lo deseas
+                                onProductoCreado={fetchProductos}
                             />
                         </div>
                     </div>

@@ -1,13 +1,17 @@
-import React, { useState /* , useEffect */ } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import type { Producto } from '../types/product';
-// import type { Categoria } from '../types/category';
+import type { Categoria } from '../types/category';
+import { CategoriasDataSource } from '../services/CategoriasDataSource';
+import { ProductosDataSource } from '../services/ProductosDataSource';
+import { Modal } from 'bootstrap';
+
 
 interface Props {
+    onClose: () => void;
     onProductoCreado?: () => void;
 }
 
-const AgregarProductoForm: React.FC<Props> = ({ onProductoCreado }) => {
+const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => {
     const [form, setForm] = useState<Partial<Producto>>({
         nombre: '',
         descripcion: '',
@@ -15,41 +19,37 @@ const AgregarProductoForm: React.FC<Props> = ({ onProductoCreado }) => {
         stock: 0,
     });
 
-    // const [categorias, setCategorias] = useState<Categoria[]>([]);
-    // const [selectedCategorias, setSelectedCategorias] = useState<string[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [selectedCategorias, setSelectedCategorias] = useState<string[]>([]);
     const [imagenes, setImagenes] = useState<File[]>([]);
 
-    // 🔧 Cuando la API esté lista, descomenta este useEffect para cargar categorías
-    /*
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_API_URL}/Categorias`)
-            .then(res => {
-                if (Array.isArray(res.data)) {
-                    setCategorias(res.data);
-                } else {
-                    console.error("Respuesta inesperada al cargar categorías", res.data);
-                    setCategorias([]);
-                }
-            })
-            .catch(err => {
+        const categoriasApi = new CategoriasDataSource(`https://localhost:7153/api/Categorias`);
+        categoriasApi.GetCategorias((data, err) => {
+            if (err || !data) {
                 console.error("Error cargando categorías", err);
                 setCategorias([]);
-            });
+            } else {
+                setCategorias(data);
+            }
+        });
     }, []);
-    */
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: name === "precio" || name === "stock" ? Number(value) : value }));
+        setForm(prev => ({
+            ...prev,
+            [name]: name === "precio" || name === "stock" ? Number(value) : value
+        }));
     };
 
-    // const handleCategoriaToggle = (id: string) => {
-    //     setSelectedCategorias(prev =>
-    //         prev.includes(id)
-    //             ? prev.filter(cid => cid !== id)
-    //             : [...prev, id]
-    //     );
-    // };
+    const handleCategoriaToggle = (id: string) => {
+        setSelectedCategorias(prev =>
+            prev.includes(id)
+                ? prev.filter(cid => cid !== id)
+                : [...prev, id]
+        );
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -61,29 +61,28 @@ const AgregarProductoForm: React.FC<Props> = ({ onProductoCreado }) => {
         e.preventDefault();
 
         try {
-            const formData = new FormData();
-            formData.append("Producto.Nombre", form.nombre ?? "");
-            formData.append("Producto.Descripcion", form.descripcion ?? "");
-            formData.append("Producto.Precio", String(form.precio ?? 0));
-            formData.append("Producto.Stock", String(form.stock ?? 0));
-
-            // selectedCategorias.forEach((id, index) => {
-            //     formData.append(`CategoriasIds[${index}]`, id);
-            // });
-
-            imagenes.forEach(file => {
-                formData.append("Files", file);
-            });
-
-            await axios.post(`${import.meta.env.VITE_API_URL}/Productos`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+            const productosApi = new ProductosDataSource('https://localhost:7153/api/Productos');
+            await productosApi.AddProducto(form, selectedCategorias, imagenes, (data, err) => {
+                if (err) throw err;
             });
 
             alert("Producto creado correctamente");
             setForm({ nombre: '', descripcion: '', precio: 0, stock: 0 });
-            // setSelectedCategorias([]);
+            setSelectedCategorias([]);
             setImagenes([]);
+
             if (onProductoCreado) onProductoCreado();
+
+            // Cierra el modal manualmente usando Bootstrap API
+            const modalEl = document.getElementById('modalAgregarProducto');
+            if (modalEl) {
+                const modal = Modal.getInstance(modalEl);
+
+                modal?.hide();
+                document.body.classList.remove('modal-open');
+                document.querySelector('.modal-backdrop')?.remove();
+
+            }
         } catch (error) {
             console.error("Error al agregar producto:", error);
             alert("Error al crear producto");
@@ -91,8 +90,7 @@ const AgregarProductoForm: React.FC<Props> = ({ onProductoCreado }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mb-5" encType="multipart/form-data">
-            <h4 className="mb-3">Agregar nuevo producto</h4>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="mb-3">
                 <label className="form-label">Nombre</label>
                 <input type="text" className="form-control" name="nombre" value={form.nombre} onChange={handleChange} required />
@@ -118,21 +116,30 @@ const AgregarProductoForm: React.FC<Props> = ({ onProductoCreado }) => {
                 <input type="file" multiple className="form-control" onChange={handleFileChange} />
             </div>
 
-            {/* 
             <div className="mb-3">
                 <label className="form-label">Categorías</label>
                 <div className="d-flex flex-wrap">
                     {categorias.map(cat => (
-                        <div key={cat.id} className="form-check me-3">
-                            <input className="form-check-input" type="checkbox" id={cat.id} checked={selectedCategorias.includes(cat.id)} onChange={() => handleCategoriaToggle(cat.id)} />
-                            <label className="form-check-label" htmlFor={cat.id}>{cat.nombre}</label>
+                        <div key={cat.idCategoria} className="form-check me-3">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id={cat.idCategoria}
+                                checked={selectedCategorias.includes(cat.idCategoria)}
+                                onChange={() => handleCategoriaToggle(cat.idCategoria)}
+                            />
+                            <label className="form-check-label" htmlFor={cat.idCategoria}>
+                                {cat.nombre}
+                            </label>
                         </div>
                     ))}
                 </div>
             </div>
-            */}
 
-            <button type="submit" className="btn btn-success">Guardar producto</button>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" className="btn btn-success">Guardar producto</button>
+            </div>
         </form>
     );
 };
