@@ -1,18 +1,15 @@
-// src/MainLayout.tsx
-import React from "react";
-// Ya no necesitas importar BrowserRouter aquí
-import { Route, Routes, Link } from "react-router-dom"; // Sigue importando Route, Routes, Link
-import Productos from "../pages/Productos"; // Asegúrate de que la ruta sea correcta
+import { Outlet, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const MainLayout: React.FC = () => {
+    const { user, logout } = useAuth();
+
     return (
         <div className="d-flex flex-column min-vh-100">
-            {/* Navbar */}
-            <header>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-                    <div className="container-fluid">
-                        {/* Estos Links ahora están dentro del BrowserRouter global */}
-                        <Link className="navbar-brand fw-bold" to="/">Nickymartin</Link>
+            <header className="bg-white shadow-sm">
+                <nav className="navbar navbar-expand-lg navbar-light container-fluid">
+                    <div className="container">
+                        <Link className="navbar-brand fw-bold me-4" to="/">Nickymartin</Link>
                         <button
                             className="navbar-toggler"
                             type="button"
@@ -24,33 +21,62 @@ const MainLayout: React.FC = () => {
                         >
                             <span className="navbar-toggler-icon"></span>
                         </button>
-                        <div className="collapse navbar-collapse" id="navbarNav">
-                            <ul className="navbar-nav ms-auto">
+
+                        <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
+                            <ul className="navbar-nav">
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/">Inicio</Link>
                                 </li>
+                            </ul>
+
+                            <ul className="navbar-nav">
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/carrito">Carrito</Link>
                                 </li>
+                                {!user ? (
+                                    <>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/login">Iniciar sesiÃ³n</Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" to="/register">Registrarse</Link>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item dropdown">
+                                        <a
+                                            className="nav-link dropdown-toggle"
+                                            href="#"
+                                            id="userDropdown"
+                                            role="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            Hola, {user.name}
+                                        </a>
+                                        <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                            <li><Link className="dropdown-item" to="/usuario">InformaciÃ³n de usuario</Link></li>
+                                            <li><hr className="dropdown-divider" /></li>
+                                            <li><button className="dropdown-item" onClick={logout}>Cerrar sesiÃ³n</button></li>
+                                        </ul>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
                 </nav>
             </header>
 
-            {/* Contenido */}
-            <main className="flex-grow-1 py-4 bg-light">
-                {/* Routes y Route deben estar dentro del BrowserRouter global */}
-                <Routes>
-                    <Route path="/" element={<Productos />} />
-                    {/* Agrega más rutas aquí si es necesario */}
-                    {/* <Route path="/carrito" element={<Carrito />} /> */}
-                </Routes>
+            <main className="flex-grow-1 py-4">
+                <div className="container">
+                    <Outlet />
+                </div>
             </main>
 
-            {/* Footer */}
-            <footer className="bg-light text-center py-3 text-muted border-top">
-                © 2025 Nickymartin. Todos los derechos reservados.
+            <footer className="bg-light text-center py-3 text-muted border-top mt-auto">
+                <div className="container">
+                    Â© 2025 Nickymartin. Todos los derechos reservados.
+                </div>
             </footer>
         </div>
     );

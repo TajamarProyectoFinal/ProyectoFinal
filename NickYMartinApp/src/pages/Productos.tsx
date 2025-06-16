@@ -1,11 +1,15 @@
-// src/pages/Productos.tsx
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { ProductosDataSource } from "../services/ProductosDataSource";
 import type { ProductosCategorias, ProductosViewModel } from "../types/product";
 import { SearchTypes } from "../types/SearchTypes";
+import AgregarProductoForm from "../components/AgregarProducto";
+import { Modal } from 'bootstrap';
+
+
 
 const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
+
 
 const Productos: React.FC = () => {
     const [productos, setProductos] = useState<ProductosCategorias[]>([]);
@@ -14,61 +18,81 @@ const Productos: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
 
-    useEffect(() => {
+    const fetchProductos = () => {
         setLoading(true);
         setError(null);
-
-        const handleApiResponse = (data: ProductosViewModel | null, err?: any) => {
-            if (err) {
-                console.error("Error al cargar productos:", err);
-                setError(err);
-                setProductos([]);
-                setTotal(0);
-            } else if (data) {
-                console.log("Datos recibidos:", data);
-                setProductos(data.productos || []);
-                setTotal(data.totalResults);
-            }
-            setLoading(false);
-        };
 
         productosApi.GetData(
             page,
             6,
             {},
             SearchTypes.List,
-            handleApiResponse
+            (data, err) => {
+                if (err) {
+                    setError(err);
+                    setProductos([]);
+                    setTotal(0);
+                } else if (data) {
+                    setProductos(data.productos || []);
+                    setTotal(data.totalResults);
+                }
+                setLoading(false);
+            }
         );
+    };
+
+    useEffect(() => {
+        fetchProductos();
     }, [page]);
 
-    // Calcular el número total de páginas
     const totalPages = Math.ceil(total / 6);
 
-    if (loading) {
-        return (
-            <div className="container mt-5 text-center">
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Cargando productos...</span>
-                </div>
-                <p className="mt-2">Cargando productos...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="container mt-5 text-center alert alert-danger" role="alert">
-                Error al cargar productos: {error.message || "Ha ocurrido un error desconocido."}
-            </div>
-        );
-    }
-
     return (
-        <div className="container mt-4"> {/* Bootstrap container para el padding */}
-            <h1 className="mb-4 text-center">Catálogo de productos</h1> {/* mb-4 para margen inferior */}
+        <>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h1>CatÃ¡logo de productos</h1>
+                {/* BotÃ³n para abrir modal */}
+                <button
+                    className="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalAgregarProducto"
+                >
+                    + Agregar producto
+                </button>
+            </div>
 
-            {productos.length > 0 ? (
-                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4"> {/* g-4 para el espacio entre columnas y filas */}
+            {/* Modal Bootstrap */}
+            <div className="modal fade" id="modalAgregarProducto" tabIndex={-1} aria-labelledby="modalAgregarProductoLabel" aria-hidden="true">
+                <div className="modal-dialog modal-lg">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="modalAgregarProductoLabel">Nuevo producto</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div className="modal-body">
+                            <AgregarProductoForm
+                                onProductoCreado={() => {
+                                    fetchProductos();
+                                    const modalEl = document.getElementById('modalAgregarProducto');
+                                    const modal = Modal.getInstance(modalEl!) || new Modal(modalEl!);
+                                    modal?.hide();
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Lista de productos */}
+            {loading ? (
+                <div className="text-center mt-5">
+                    <div className="spinner-border text-primary" />
+                    <p className="mt-2">Cargando productos...</p>
+                </div>
+            ) : error ? (
+                <div className="alert alert-danger text-center">Error al cargar productos</div>
+            ) : productos.length > 0 ? (
+                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     {productos.map((producto) => (
                         <div key={producto.producto.idProducto} className="col">
                             <ProductCard producto={producto.producto} />
@@ -76,14 +100,12 @@ const Productos: React.FC = () => {
                     ))}
                 </div>
             ) : (
-                <div className="alert alert-info text-center" role="alert">
-                    No hay productos disponibles.
-                </div>
+                <div className="alert alert-info text-center">No hay productos disponibles.</div>
             )}
 
-            {/* Paginación con Bootstrap */}
+            {/* PaginaciÃ³n */}
             {totalPages > 1 && (
-                <nav aria-label="Page navigation" className="mt-4 d-flex justify-content-center">
+                <nav className="mt-4 d-flex justify-content-center">
                     <ul className="pagination">
                         <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
                             <button className="page-link" onClick={() => setPage(page - 1)} disabled={page === 1}>
@@ -92,12 +114,7 @@ const Productos: React.FC = () => {
                         </li>
                         {Array.from({ length: totalPages }).map((_, i) => (
                             <li key={i} className={`page-item ${page === i + 1 ? 'active' : ''}`}>
-                                <button
-                                    className="page-link"
-                                    onClick={() => setPage(i + 1)}
-                                >
-                                    {i + 1}
-                                </button>
+                                <button className="page-link" onClick={() => setPage(i + 1)}>{i + 1}</button>
                             </li>
                         ))}
                         <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
@@ -108,7 +125,7 @@ const Productos: React.FC = () => {
                     </ul>
                 </nav>
             )}
-        </div>
+        </>
     );
 };
 
