@@ -41,26 +41,36 @@ namespace NickYMartinApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProducto(ProductoViewModel productoVm)
+        public async Task<IActionResult> AddProducto(
+    [FromForm] string nombre,
+    [FromForm] string descripcion,
+    [FromForm] decimal precio,
+    [FromForm] int stock,
+    [FromForm] List<IFormFile> files,
+    [FromForm] List<string> categoriasIds)
         {
-            Producto producto = new Producto();
-            producto = await _productoService.AddProducto(productoVm.Producto, productoVm.Files, productoVm.CategoriasIds);
-
-            if (producto.IdProducto != Guid.Empty)
+            var producto = new Producto
             {
-                return Ok("No se ha podido añadir el producto");
-            }
-            else
-            {
-                return Ok(new ProductoViewModel()
-                {
-                    Producto = productoVm.Producto,
-                    CategoriasIds = productoVm.CategoriasIds,
-                    Action = Enums.ActionTypes.Create
-                });
-            }
+                Nombre = nombre,
+                Descripcion = descripcion,
+                Precio = precio,
+                Stock = stock,
+                FechaCreacion = DateTime.Now,
+                FechaActualizacion = DateTime.Now
+            };
 
+            var resultado = await _productoService.AddProducto(producto, files, categoriasIds);
+
+            if (resultado.IdProducto == Guid.Empty)
+                return StatusCode(500, "No se ha podido añadir el producto");
+
+            return Ok(new
+            {
+                producto = resultado,
+                categoriasIds
+            });
         }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> getProdutoById(Guid idProducto)

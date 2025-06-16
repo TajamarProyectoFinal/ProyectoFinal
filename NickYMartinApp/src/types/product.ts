@@ -30,7 +30,17 @@ export interface ProductosFilters {
     fechaActualizacion?: string;
 }
 export interface ProductosCategorias {
-    producto: Producto; // asumiendo que ProductoCategoriasViewModel ? Producto
+    producto: Producto;
     categorias?: Categoria[];
-    imagen: string;
+    mainImageUrl: string;
+}
+export interface MultimediaProducto {
+    idMultimedia: string;
+    idProducto: string;
+    tipo?: string;
+    url?: string;
+    nombreArchivo?: string;
+    descripcion?: string;
+    orden: number;
+    fechaCreacion: string;
 }
