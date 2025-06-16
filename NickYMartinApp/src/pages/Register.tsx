@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { UsersDataSource } from '../services/UsersDataSource';
+import type { UserRegisterDto } from '../types/user';
+
+const usersApi = new UsersDataSource("https://localhost:7153/api/Users");
 
 const Register: React.FC = () => {
     const [form, setForm] = useState({
@@ -8,6 +12,9 @@ const Register: React.FC = () => {
         password: '',
         confirmPassword: '',
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -21,7 +28,27 @@ const Register: React.FC = () => {
             return;
         }
 
-        console.log(form); // Aquí irá la llamada a tu API
+        const userRegister: UserRegisterDto = {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            password: form.password,
+            confirmPassword: form.confirmPassword
+        }
+
+        usersApi.UserRegister(userRegister, (data, err) => {
+            if (err) {
+                setError(err);
+                //Mostrar un mensaje de error
+            } else if (data) {
+                //TODO
+                //Llevar a login
+                console.log("usuario registrado")
+                console.log("data", data)
+            }
+            setLoading(false);
+        })
+
     };
 
     return (

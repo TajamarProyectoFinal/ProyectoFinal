@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NickYMartinApi.Interfaces;
 using NickYMartinApi.Models;
+using NickYMartinApi.Dto;
 using NickYMartinApi.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
@@ -23,13 +24,13 @@ namespace NickYMartinApi.Controllers
         {
              await _userService.CreateUser(user);
 
-            return Ok();
+            return Ok("Usuario creado correctamente");
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUser(string email, string password)
+        public async Task<IActionResult> LoginUser([FromBody]userLoginDto user)
         {
-            var token = await _userService.LoginUser(email, password);
+            var token = await _userService.LoginUser(user.Email, user.Password);
 
             if (token != null) {
                 return Ok(token);

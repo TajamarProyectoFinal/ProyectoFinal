@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NickYMartinApi.Enums;
@@ -21,6 +22,7 @@ namespace NickYMartinApi.Controllers
             _categoriaService = categoriaService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index(
             [FromQuery] SearchTypes searchType,
