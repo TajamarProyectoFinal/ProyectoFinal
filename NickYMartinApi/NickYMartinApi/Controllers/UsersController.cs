@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NickYMartinApi.Interfaces;
 using NickYMartinApi.Models;
+using NickYMartinApi.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace NickYMartinApi.Controllers
@@ -17,16 +18,27 @@ namespace NickYMartinApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{email}-{password}")]
-        public async Task<IActionResult> GetUser(string email, string password)
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUser([FromBody]UserViewmodel user)
         {
+             await _userService.CreateUser(user);
+
             return Ok();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody]User user)
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser(string email, string password)
         {
-            return Ok();
+            var token = await _userService.LoginUser(email, password);
+
+            if (token != null) {
+                return Ok(token);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+
         }
     }
 }

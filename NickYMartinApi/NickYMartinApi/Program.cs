@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NickYMartinApi.Data;
 using NickYMartinApi.Interfaces;
 using NickYMartinApi.Repositories;
 using NickYMartinApi.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,28 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tu_clave_super_secreta"))
+    };
+});
+
+
+
+
 string connectionString = !string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection")) ? builder.Configuration.GetConnectionString("DefaultConnection") : Environment.GetEnvironmentVariable("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -30,6 +55,8 @@ builder.Services.AddScoped<IProductosRepository, ProductosRepository>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<ICarritoRepository, CarritoRepository>();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -55,6 +82,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("MyPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
