@@ -42,22 +42,22 @@ export class ProductosDataSource {
         files: File[] = [],
         callback: ApiCallback<any>
     ) {
-        const formData = new FormData();
-        formData.append("Producto.Nombre", producto.nombre ?? "");
-        formData.append("Producto.Descripcion", producto.descripcion ?? "");
-        formData.append("Producto.Precio", String(producto.precio ?? 0));
-        formData.append("Producto.Stock", String(producto.stock ?? 0));
-
-        categoriasIds.forEach((id, index) => {
-            formData.append(`CategoriasIds[${index}]`, id);
-        });
-
-        files.forEach(file => {
-            formData.append("Files", file);
-        });
-
+        const formData = this.BuildFormData(producto, categoriasIds, files);
         const url = `${this.BASE_URL}`;
         this.SendRequest("post", url, callback, formData);
+    }
+
+    // EDITAR producto
+    async UpdateProducto(
+        id: string,
+        producto: Partial<Producto>,
+        categoriasIds: string[],
+        files: File[] = [],
+        callback: ApiCallback<any>
+    ) {
+        const formData = this.BuildFormData(producto, categoriasIds, files);
+        const url = `${this.BASE_URL}/${id}`;
+        this.SendRequest("put", url, callback, formData);
     }
 
     // ELIMINAR producto
@@ -69,7 +69,30 @@ export class ProductosDataSource {
         this.SendRequest("delete", url, callback);
     }
 
-    // Método reutilizado
+    // Utilidades
+    private BuildFormData(
+        producto: Partial<Producto>,
+        categoriasIds: string[],
+        files: File[]
+    ): FormData {
+        const formData = new FormData();
+        formData.append("nombre", producto.nombre ?? "");
+        formData.append("descripcion", producto.descripcion ?? "");
+        formData.append("precio", String(producto.precio ?? 0));
+        formData.append("stock", String(producto.stock ?? 0));
+
+
+        categoriasIds.forEach(id => {
+            formData.append("categoriasIds", id); // importante: sin índices
+        });
+
+        files.forEach(file => {
+            formData.append("Files", file);
+        });
+
+        return formData;
+    }
+
     private async SendRequest<T>(
         method: Method,
         url: string,
