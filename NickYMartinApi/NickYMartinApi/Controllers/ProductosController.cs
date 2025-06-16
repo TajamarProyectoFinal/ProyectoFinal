@@ -46,11 +46,9 @@ namespace NickYMartinApi.Controllers
             Producto producto = new Producto();
             producto = await _productoService.AddProducto(productoVm.Producto, productoVm.Files, productoVm.CategoriasIds);
 
-            //ViewBag.CategoriasList = await GetCategoriasSelectList();
-
             if (producto.IdProducto != Guid.Empty)
             {
-                return RedirectToAction(nameof(Index));
+                return Ok("No se ha podido añadir el producto");
             }
             else
             {
@@ -93,14 +91,14 @@ namespace NickYMartinApi.Controllers
                 //TempData["Mensaje"] = "El producto se actualizo correctamente.";
                 //TempData["TipoMensaje"] = "success";
 
-                return RedirectToAction(nameof(Index));
+                return Ok("El producto se ha actualizado con exito");
             }
             else
             {
                 //TempData["Mensaje"] = "Se ha producido un error al actualizar el producto.";
                 //TempData["TipoMensaje"] = "error";
 
-                return Ok(new ProductoViewModel()
+                return BadRequest(new ProductoViewModel()
                 {
                     Producto = producto,
                     Categorias = categorias,
@@ -116,20 +114,6 @@ namespace NickYMartinApi.Controllers
             bool response = await _productoService.DeleteProducto(idProducto);
  
             return Ok(response);
-        }
-
-        private async Task<SelectList> GetCategoriasSelectList()
-        {
-            List<Categoria> categorias = await _categoriaService.GetCategorias();
-
-            List<SelectListItem> items = new List<SelectListItem>();
-
-            foreach (Categoria categoria in categorias)
-            {
-                items.Add(new SelectListItem() { Text = categoria.Nombre, Value = categoria.IdCategoria.ToString() });
-            }
-
-            return new SelectList(items, "Value", "Text");
         }
     }
 }
