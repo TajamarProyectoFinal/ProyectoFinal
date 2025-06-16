@@ -1,15 +1,39 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { UsersDataSource } from '../services/UsersDataSource';
+import type { UserLoginDto } from '../types/user';
+
+const usersApi = new UsersDataSource("https://localhost:7153/api/Users");
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
+
     const handleSubmit = (e: React.FormEvent) => {
+        setLoading(true);
+        setError(null);
         e.preventDefault();
-        login({ id: "1", name: "Nick", email: "nick@example.com" }); //esto es solo para hace la prueba, borrar despues 
-        console.log({ email, password });
-        // Aquí iría la llamada a la API cuando esté lista
+
+        const loginPayload: UserLoginDto = {
+            email: email,
+            password: password
+        };
+
+        usersApi.UserLogin(loginPayload, (data, err) => {
+            if (err) {
+                setError(err);
+                //Mostrar un mensaje de error
+            } else if (data) {
+                //TODO
+                //Actualizar pagina con perfil de usuario
+                console.log("sesion iniciada")
+                console.log("data", data)
+            }
+            setLoading(false);
+        })
     };
    
 
