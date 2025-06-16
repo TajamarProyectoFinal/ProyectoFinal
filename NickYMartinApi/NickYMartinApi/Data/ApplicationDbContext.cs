@@ -23,6 +23,7 @@ namespace NickYMartinApi.Data
         public DbSet<Valoracion> Valoraciones { get; set; }
         public DbSet<Favorito> Favoritos { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
