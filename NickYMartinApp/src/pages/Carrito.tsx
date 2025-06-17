@@ -14,12 +14,10 @@ const CarritoView = () => {
 
     const navigate = useNavigate();
 
-    // Use useRef to ensure carritoDataSource instance is stable across renders
     const carritoDataSourceRef = useRef(new CarritoDataSource("https://localhost:7153/api/Carrito"));
     const carritoDataSource = carritoDataSourceRef.current; // Access the current instance
 
     useEffect(() => {
-        // Redirect if user is not logged in
         if (!user) {
             navigate('/login');
             return;
@@ -38,13 +36,12 @@ const CarritoView = () => {
 
             carritoDataSource.getUserCarrito(userId, (data, err) => {
                 if (err) {
-                    let errorMessage = "Error desconocido al cargar el carrito.";
-                    // Attempt to extract more specific error messages from Axios error structure
+                    let errorMessage = "Error desconocido al cargar el carrito.";                   
                     if (err.response && err.response.data && err.response.data.message) {
                         errorMessage = `Error del servidor: ${err.response.data.message}`;
                     } else if (err.message) {
                         errorMessage = `Error de red: ${err.message}`;
-                    } else if (typeof err === 'string') { // Fallback for simple string errors
+                    } else if (typeof err === 'string') { 
                         errorMessage = err;
                     }
                     setError(errorMessage);
@@ -57,8 +54,7 @@ const CarritoView = () => {
                         itemsCarrito: Array.isArray(data.itemsCarrito) ? data.itemsCarrito : []
                     };
                     setCarrito(processedCarrito);
-                } else {
-                    // Handle cases where data is null/undefined but no specific error was thrown
+                } else {                 
                     setError("No se encontraron datos del carrito o el formato es inesperado.");
                     setCarrito(undefined); // Ensure carrito is reset
                 }
@@ -67,7 +63,7 @@ const CarritoView = () => {
         };
 
         fetchCarrito();
-    }, [userId, navigate]); // Depend on userId and navigate. carritoDataSource is stable via useRef.
+    }, [userId, navigate]); 
 
     // --- Loading State ---
     if (loading) {
@@ -95,7 +91,6 @@ const CarritoView = () => {
     }
 
     // --- Empty Cart State ---
-    // Now that itemsCarrito is guaranteed to be an array, we only need to check its length.
     if (!carrito || (carrito.itemsCarrito && carrito.itemsCarrito.length === 0)) {
         return (
             <div className="container my-5">
@@ -121,18 +116,14 @@ const CarritoView = () => {
                             <th>Precio Unitario</th>
                             <th>Cantidad</th>
                             <th>Subtotal</th>
-                            {/* Optional: Actions column */}
-                            {/* <th>Acciones</th> */}
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Now it's safe to map over carrito.itemsCarrito */}
                         {carrito.itemsCarrito.map((item) => (
                             <tr key={item.idItemCarrito}>
                                 <td>
                                     <div className="d-flex align-items-center">
                                         <img
-                                            // Prioritize item.mainImageUrl, then item.producto?.mainImagenUrl, then placeholder
                                             src={item.mainImageUrl || item.producto?.mainImagenUrl || 'https://via.placeholder.com/60'}
                                             alt={item.producto?.nombre || 'Producto'}
                                             className="rounded me-3"
@@ -148,11 +139,6 @@ const CarritoView = () => {
                                 <td>${item.precioUnitario.toFixed(2)}</td>
                                 <td>{item.cantidad}</td>
                                 <td>${item.subtotal.toFixed(2)}</td>
-                                {/* Optional: Action buttons */}
-                                {/* <td>
-                                     <button className="btn btn-danger btn-sm me-2">Eliminar</button>
-                                     <button className="btn btn-info btn-sm">Actualizar</button>
-                                 </td> */}
                             </tr>
                         ))}
                     </tbody>
