@@ -42,12 +42,13 @@ namespace NickYMartinApi.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddProducto(
-    [FromForm] string nombre,
-    [FromForm] string descripcion,
-    [FromForm] decimal precio,
-    [FromForm] int stock,
-    [FromForm] List<IFormFile> files,
-    [FromForm] List<string> categoriasIds)
+            [FromForm] string nombre,
+            [FromForm] string descripcion,
+            [FromForm] decimal precio,
+            [FromForm] int stock,
+            [FromForm] List<IFormFile> files,
+            [FromForm] List<string> categoriasIds
+        )
         {
             var producto = new Producto
             {

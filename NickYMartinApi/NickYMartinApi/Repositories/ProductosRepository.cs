@@ -11,53 +11,63 @@ namespace NickYMartinApi.Repositories
     {
         private readonly ApplicationDbContext? _context;
         private readonly ILogger<ProductosRepository> _logger;
-        private readonly string _bucketName; 
+        private readonly IBlobService _blobService;
 
-        public ProductosRepository(ApplicationDbContext context, ILogger<ProductosRepository> logger, IConfiguration configuration)
+        public ProductosRepository(
+            ApplicationDbContext context, 
+            ILogger<ProductosRepository> logger, 
+            IBlobService blobService)
         {
             _context = context;
             _logger = logger;
-            _bucketName = configuration["bucketName"];
+            _blobService = blobService;
         }
 
         public async Task<bool> AddMultimediasProducto(Guid idProducto, List<IFormFile> files)
         {
             bool respuesta = false;
-            if(files == null || files.Count() > 0)
+            if(files == null || files.Count() == 0)
             {
                 return respuesta;
             }
 
             try
             {
+                int orden = 1;
                 foreach (IFormFile file in files)
                 {
-                   
+                    string tipo = GetFileType(file.FileName);
 
-                    string tipo = GetFileType(file.Name);
-                    int orden = 1;
-
-                    MultimediaProducto prevoMultimediaProducto = await _context.MultimediaProductos.OrderByDescending(o => o.Orden).FirstOrDefaultAsync(
+                    MultimediaProducto prevMultimediaProducto = await _context.MultimediaProductos.OrderByDescending(o => o.Orden).FirstOrDefaultAsync(
                         m => m.IdProducto == idProducto && m.Tipo == tipo
                     );
 
-                    if(prevoMultimediaProducto != null)
+                    if(prevMultimediaProducto != null)
                     {
-                        orden = prevoMultimediaProducto.Orden + 1;
+                        orden = prevMultimediaProducto.Orden + 1;
                     }
 
-                    MultimediaProducto multimediaProducto = new MultimediaProducto()
-                    {
-                        IdProducto = idProducto,
-                        NombreArchivo = file.Name,
-                        Descripcion = "",
-                        Url = "",
-                        Tipo = tipo, 
-                        Orden = orden,
-                        FechaCreacion = DateTime.Now,
-                    };
+                    var stream = file.OpenReadStream();
+                    string fileName = $"{Guid.NewGuid()}_{file.Name}";
 
-                    await _context.MultimediaProductos.AddAsync(multimediaProducto);
+                    bool uploadSuccess = await _blobService.UploadFile(stream, fileName);
+
+                    if (uploadSuccess) 
+                    {
+                        MultimediaProducto multimediaProducto = new MultimediaProducto()
+                        {
+                            IdProducto = idProducto,
+                            NombreArchivo = fileName,
+                            Descripcion = tipo + " " + file.Name,
+                            Url = await _blobService.GetPictureUrl(fileName),
+                            Tipo = tipo,
+                            Orden = orden,
+                            FechaCreacion = DateTime.Now,
+                        };
+
+                        await _context.MultimediaProductos.AddAsync(multimediaProducto);
+                        orden++;
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -73,11 +83,39 @@ namespace NickYMartinApi.Repositories
 
         public string GetFileType(string filename)
         {
-            string type = "";
+            string type = ITiposMultimedia.OTRO; // Tipo por defecto
+
+            if (string.IsNullOrEmpty(filename))
+            {
+                return type;
+            }
+
+            // Obtener la extensión del archivo y convertirla a minúsculas para una comparación sin distinción entre mayúsculas y minúsculas
+            string extension = Path.GetExtension(filename)?.ToLowerInvariant();
+
+            if (extension != null)
+            {
+                string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif" };
+                if (imageExtensions.Contains(extension))
+                {
+                    type = ITiposMultimedia.IMAGEN;
+                }
+                else if (new[] { ".mp4", ".avi", ".mov", ".wmv", ".flv", ".webm", ".mkv" }.Contains(extension))
+                {
+                    type = ITiposMultimedia.VIDEO;
+                }
+                else if (new[] { ".pdf", ".doc", ".docx", ".txt" }.Contains(extension))
+                {
+                    type = ITiposMultimedia.DOCUMENTO;
+                }
+                else if (new[] { ".mp3", ".wav", ".aac" }.Contains(extension))
+                {
+                    type = ITiposMultimedia.AUDIO;
+                }
+            }
 
             return type;
         }
-
         public async Task<Producto?> AddProducto(Producto producto)
         {
             try

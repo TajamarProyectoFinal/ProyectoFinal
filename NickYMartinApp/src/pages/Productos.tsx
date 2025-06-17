@@ -32,6 +32,7 @@ const Productos: React.FC = () => {
                 } else if (data) {
                     setProductos(data.productos || []);
                     setTotal(data.totalResults);
+                    
                 }
                 setLoading(false);
             }
@@ -91,7 +92,7 @@ const Productos: React.FC = () => {
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     {productos.map((producto) => (
                         <div key={producto.producto.idProducto} className="col">
-                            <ProductCard producto={producto.producto} />
+                            <ProductCard producto={producto.producto} mainImage={producto.mainImageUrl} />
                         </div>
                     ))}
                 </div>

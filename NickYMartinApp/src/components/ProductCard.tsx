@@ -4,13 +4,14 @@ import type { Producto } from '../types/product';
 
 interface ProductCardProps {
     producto: Producto;
+    mainImage: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ producto, mainImage }) => {
     return (
-        <div className="card h-100"> 
-            {producto.mainImagenUrl && (
-                <img src={producto.mainImagenUrl} className="card-img-top" alt={producto.nombre} style={{ maxHeight: '200px', objectFit: 'cover' }} />
+        <div className="card h-100">
+            {mainImage && (
+                <img src={mainImage} className="card-img-top" alt={producto.nombre} style={{ maxHeight: '200px', objectFit: 'cover' }} />
             )}
             <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{producto.nombre}</h5>
