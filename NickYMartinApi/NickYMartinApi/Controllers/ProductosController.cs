@@ -42,7 +42,6 @@ namespace NickYMartinApi.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddProducto(
-<<<<<<< main
             [FromForm] string nombre,
             [FromForm] string descripcion,
             [FromForm] decimal precio,
@@ -50,14 +49,6 @@ namespace NickYMartinApi.Controllers
             [FromForm] List<IFormFile> files,
             [FromForm] List<string> categoriasIds
         )
-=======
-    [FromForm] string nombre,
-    [FromForm] string descripcion,
-    [FromForm] decimal precio,
-    [FromForm] int stock,
-    [FromForm] List<IFormFile> files,
-    [FromForm] List<string> categoriasIds)
->>>>>>> martin
         {
             var producto = new Producto
             {
