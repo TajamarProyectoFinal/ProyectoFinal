@@ -33,7 +33,7 @@ namespace NickYMartinApi.Services
 
             if (user != null)
             {
-                var token = GenerarToken(user.Name);
+                var token = GenerarToken(user);
 
                 return token;
             }
@@ -41,13 +41,17 @@ namespace NickYMartinApi.Services
             return null;
         }
 
-        private string GenerarToken(string name)
+        private string GenerarToken(User user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, name),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.Name, user.Name ?? ""),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim("phone", user.Phone ?? ""),
+        new Claim("role", user.Role?.NombreRol ?? "Cliente"),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -62,5 +66,6 @@ namespace NickYMartinApi.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

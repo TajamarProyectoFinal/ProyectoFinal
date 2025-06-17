@@ -41,6 +41,7 @@ const Productos: React.FC = () => {
 
     useEffect(() => {
         fetchProductos();
+        localStorage.clear();
     }, [page]);
 
     const totalPages = Math.ceil(total / 6);

@@ -49,8 +49,8 @@ const MainLayout: React.FC = () => {
                                             href="#"
                                             id="userDropdown"
                                             role="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="true"
                                         >
                                             Hola, {user.name}
                                         </a>
