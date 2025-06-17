@@ -3,6 +3,7 @@
     public enum ActionTypes
     {
         Create = 1,
-        Update
+        Update = 2,
+        List = 3
     }
 }

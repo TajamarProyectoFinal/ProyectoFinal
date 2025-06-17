@@ -2,6 +2,8 @@ import axios from "axios";
 import type { Method } from "axios";
 import type { ProductosViewModel, ProductosFilters, Producto } from "../types/product";
 import { SearchTypes } from "../types/SearchTypes";
+import type { ProductoDTO } from "../types/productoDTO";
+import type { ActionTypes } from "../types/ActionTypes";
 
 type ApiCallback<T> = (data: T | null, error?: any) => void;
 
@@ -69,6 +71,11 @@ export class ProductosDataSource {
         this.SendRequest("delete", url, callback);
     }
 
+    //Detalles de productos
+    GetProductoById(id: string, ActionType: ActionTypes.List, callback: ApiCallback<ProductoDTO>) {
+        const url = `${this.BASE_URL}/${id}`;
+        this.SendRequest("get", url, callback);
+    }
     // Utilidades
     private BuildFormData(
         producto: Partial<Producto>,

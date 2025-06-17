@@ -73,8 +73,8 @@ namespace NickYMartinApi.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> getProdutoById(Guid idProducto)
+        [HttpGet("{idProducto}")]
+        public async Task<IActionResult> getProdutoById(Guid idProducto, ActionTypes action = ActionTypes.List)
         {
             //ViewBag.CategoriasList = await GetCategoriasSelectList();
             Producto? producto = await _productoService.GetProducto(idProducto);
@@ -85,11 +85,11 @@ namespace NickYMartinApi.Controllers
                 Producto = producto,
                 Categorias = categorias,
                 CategoriasIds = categorias.Select(c => c.IdCategoria.ToString()).ToList(),
-                Action = Enums.ActionTypes.Update,
+                Action = action,
             });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{idProducto}")]
         public async Task<IActionResult> UpdateProducto(Guid idProducto, ProductoViewModel productoVm)
         {
             bool response = await _productoService.UpdateProducto(idProducto, productoVm.Producto, productoVm.Files, productoVm.CategoriasIds);
