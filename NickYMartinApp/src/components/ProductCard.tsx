@@ -1,7 +1,9 @@
 // src/components/ProductCard.tsx
-import React from 'react';
+import React, { use, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Producto } from '../types/product';
+import { CarritoDataSource } from '../services/CarritoDataSource';
+import { useAuth } from '../context/AuthContext';
 
 interface ProductCardProps {
     producto: Producto;
@@ -9,12 +11,31 @@ interface ProductCardProps {
     onDelete?: (id: string) => void;
 }
 
+const carritoDataSource = new CarritoDataSource("https://localhost:7153/api/Carrito")
+
 const ProductCard: React.FC<ProductCardProps> = ({ producto, mainImage, onDelete }) => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<any>(null);
+    const { user } = useAuth(); 
 
     const handleCardClick = () => {
         navigate(`/productos/${producto.idProducto}`);
     };
+
+    const handleAddCarritoItemClick = () => {
+        if (user) {
+            carritoDataSource.CreateOrAddItemToCarrito(user?.id, producto.idProducto, 1, mainImage, (data, err) => {
+                if (err) {
+                    setError(err);
+                } else if (data) {
+                    console.log("Item agregado al carrito")
+                }
+                setLoading(false);
+            }
+            );
+        }
+    }
 
     return (
         <div className="card h-100" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
@@ -40,8 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, mainImage, onDelete
                     onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        // TODO: lógica para añadir al carrito
-                        alert("Producto añadido al carrito");
+                        handleAddCarritoItemClick();
                     }}
                 >
                     Añadir al carrito

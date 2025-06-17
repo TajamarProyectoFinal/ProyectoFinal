@@ -16,8 +16,6 @@ namespace NickYMartinApi.Services
         {
             Carrito? carrito = await GetUserCarrito(userId);
 
-            itemCarrito.IdItemCarrito = new Guid();
-
             if (carrito == null) {
                 Carrito carritoToAdd = new Carrito()
                 {
