@@ -13,6 +13,7 @@ const Productos: React.FC = () => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const fetchProductos = () => {
         setLoading(true);
@@ -31,6 +32,7 @@ const Productos: React.FC = () => {
                 } else if (data) {
                     setProductos(data.productos || []);
                     setTotal(data.totalResults);
+                    
                 }
                 setLoading(false);
             }
@@ -49,30 +51,34 @@ const Productos: React.FC = () => {
                 <h1>Catálogo de productos</h1>
                 <button
                     className="btn btn-success"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalAgregarProducto"
+                    onClick={() => setModalVisible(true)}
                 >
                     + Agregar producto
                 </button>
             </div>
 
-            {/* Modal Bootstrap */}
-            <div className="modal fade" id="modalAgregarProducto" tabIndex={-1} aria-labelledby="modalAgregarProductoLabel" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered modal-lg">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="modalAgregarProductoLabel">Nuevo producto</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div className="modal-body">
-                            <AgregarProductoForm
-                                onClose={() => { }} // ya no necesario realmente, pero puedes usarlo si lo deseas
-                                onProductoCreado={fetchProductos}
-                            />
+            {/* Modal controlado por React */}
+            {modalVisible && (
+                <div className="modal fade show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog modal-dialog-centered modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Nuevo producto</h5>
+                                <button type="button" className="btn-close" onClick={() => setModalVisible(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <AgregarProductoForm
+                                    onClose={() => setModalVisible(false)}
+                                    onProductoCreado={() => {
+                                        fetchProductos();
+                                        setModalVisible(false);
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Lista de productos */}
             {loading ? (
@@ -86,7 +92,7 @@ const Productos: React.FC = () => {
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     {productos.map((producto) => (
                         <div key={producto.producto.idProducto} className="col">
-                            <ProductCard producto={producto.producto} />
+                            <ProductCard producto={producto.producto} mainImage={producto.mainImageUrl} />
                         </div>
                     ))}
                 </div>

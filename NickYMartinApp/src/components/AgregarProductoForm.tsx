@@ -5,7 +5,6 @@ import { CategoriasDataSource } from '../services/CategoriasDataSource';
 import { ProductosDataSource } from '../services/ProductosDataSource';
 import { Modal } from 'bootstrap';
 
-
 interface Props {
     onClose: () => void;
     onProductoCreado?: () => void;
@@ -72,17 +71,7 @@ const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => 
             setImagenes([]);
 
             if (onProductoCreado) onProductoCreado();
-
-            // Cierra el modal manualmente usando Bootstrap API
-            const modalEl = document.getElementById('modalAgregarProducto');
-            if (modalEl) {
-                const modal = Modal.getInstance(modalEl);
-
-                modal?.hide();
-                document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop')?.remove();
-
-            }
+            onClose();
         } catch (error) {
             console.error("Error al agregar producto:", error);
             alert("Error al crear producto");
@@ -137,7 +126,7 @@ const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => 
             </div>
 
             <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
                 <button type="submit" className="btn btn-success">Guardar producto</button>
             </div>
         </form>

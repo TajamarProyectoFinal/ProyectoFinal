@@ -1,3 +1,5 @@
+using Azure.Identity;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -48,6 +50,21 @@ string connectionString = !string.IsNullOrEmpty(builder.Configuration.GetConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.AddSingleton<IBlobService>(options =>
+{
+    string? blobAccount = !String.IsNullOrEmpty(builder.Configuration.GetSection("BlobStorage").GetValue<string>("Account")) ? builder.Configuration.GetSection("BlobStorage").GetValue<string>("Account") : Environment.GetEnvironmentVariable("BLOB_ACCOUNT");
+    string? containerName = builder.Configuration.GetSection("BlobStorage").GetValue<string>("ContainerName");
+
+    Console.WriteLine(blobAccount);
+
+    BlobServiceClient client = new BlobServiceClient(
+        new Uri($"https://{blobAccount}.blob.core.windows.net"),
+        new DefaultAzureCredential()
+        );
+
+    return new BlobService(client, containerName);
+});
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriasRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
