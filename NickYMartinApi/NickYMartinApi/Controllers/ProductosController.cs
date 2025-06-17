@@ -119,7 +119,7 @@ namespace NickYMartinApi.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{idProducto}")]
         public async Task<IActionResult> DeleteProducto(Guid idProducto)
         {
             bool response = await _productoService.DeleteProducto(idProducto);

@@ -3,9 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 
 const Usuario: React.FC = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
 
-    // Si el usuario no está logueado, redirige a login
     if (!user) return <Navigate to="/login" replace />;
 
     return (
@@ -17,6 +16,9 @@ const Usuario: React.FC = () => {
                     <p><strong>Nombre:</strong> {user.name}</p>
                     <p><strong>Correo:</strong> {user.email}</p>
                     <p><strong>Teléfono:</strong> {user.phone}</p>
+                    <button className="btn btn-danger mt-3" onClick={logout}>
+                        Cerrar sesión
+                    </button>
                 </div>
             </div>
         </div>
