@@ -13,7 +13,7 @@ export class UsersDataSource {
     }
 
     UserLogin(
-        userLogin : UserLoginDto,
+        userLogin: UserLoginDto,
         callback: ApiCallback<string>
     ) {         
         const url = `${this.BASE_URL}/login`;

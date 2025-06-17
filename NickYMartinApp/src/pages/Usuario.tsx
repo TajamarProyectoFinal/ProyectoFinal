@@ -5,17 +5,18 @@ import { Navigate } from "react-router-dom";
 const Usuario: React.FC = () => {
     const { user } = useAuth();
 
-    // Si no está logueado, redirige
+    // Si el usuario no está logueado, redirige a login
     if (!user) return <Navigate to="/login" replace />;
 
     return (
         <div className="container mt-5" style={{ maxWidth: "600px" }}>
-            <h2 className="mb-4 text-center">Información de usuario</h2>
+            <h2 className="mb-4 text-center">Perfil de usuario</h2>
             <div className="card shadow-sm">
                 <div className="card-body">
+                    <p><strong>ID:</strong> {user.id}</p>
                     <p><strong>Nombre:</strong> {user.name}</p>
                     <p><strong>Correo:</strong> {user.email}</p>
-                    {/* Aquí puedes mostrar más campos cuando los tengas */}
+                    <p><strong>Rol:</strong> {user.role}</p>
                 </div>
             </div>
         </div>

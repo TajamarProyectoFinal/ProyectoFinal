@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { UsersDataSource } from '../services/UsersDataSource';
 import type { UserLoginDto } from '../types/user';
+import { useNavigate } from 'react-router-dom';
 
 const usersApi = new UsersDataSource("https://localhost:7153/api/Users");
 
@@ -10,33 +11,31 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const { login } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         setLoading(true);
         setError(null);
-        e.preventDefault();
 
-        const loginPayload: UserLoginDto = {
-            email: email,
-            password: password
-        };
+        const loginPayload: UserLoginDto = { email, password };
 
         usersApi.UserLogin(loginPayload, (data, err) => {
-            if (err) {
-                setError(err);
-                //Mostrar un mensaje de error
-            } else if (data) {
-                //TODO
-                //Actualizar pagina con perfil de usuario
-                console.log("sesion iniciada")
-                console.log("data", data)
-            }
             setLoading(false);
-        })
-    };
-   
 
+            if (err) {
+                console.error(err);
+                setError("Error al iniciar sesión. Verifica tus datos.");
+                return;
+            }
+
+            if (data) {
+                login(data); // 👈 tu AuthContext ya lo decodifica
+                navigate("/usuario");
+            }
+        });
+    };
 
     return (
         <div className="container mt-5" style={{ maxWidth: '400px' }}>
@@ -44,15 +43,33 @@ const Login: React.FC = () => {
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Correo electrónico</label>
-                    <input type="email" className="form-control" required value={email} onChange={e => setEmail(e.target.value)} />
+                    <input
+                        type="email"
+                        className="form-control"
+                        required
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-3">
                     <label className="form-label">Contraseña</label>
-                    <input type="password" className="form-control" required value={password} onChange={e => setPassword(e.target.value)} />
+                    <input
+                        type="password"
+                        className="form-control"
+                        required
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                    />
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100">Entrar</button>
+                {error && (
+                    <div className="alert alert-danger">{error}</div>
+                )}
+
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                    {loading ? "Cargando..." : "Entrar"}
+                </button>
             </form>
         </div>
     );
