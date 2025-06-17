@@ -1,3 +1,5 @@
+import type { UserRole } from "./roles";
+
 export interface UserRegisterDto {
     name: string;
     email: string;
@@ -14,5 +16,6 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    role: string;
+    phone: string;
+    role: UserRole;
 }

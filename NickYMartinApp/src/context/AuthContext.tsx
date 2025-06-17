@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
-    // Función para loguear y guardar token
+    // Funciï¿½n para loguear y guardar token
     const login = (jwtToken: string) => {
         try {
             const decoded: any = jwtDecode(jwtToken);
@@ -25,6 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 id: decoded.sub,
                 name: decoded.name,
                 email: decoded.email,
+                phone: decoded.phone,
                 role: decoded.role,
             };
 
@@ -32,11 +33,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setToken(jwtToken);
             localStorage.setItem("token", jwtToken);
         } catch (error) {
-            console.error("Token inválido:", error);
+            console.error("Token invï¿½lido:", error);
         }
     };
 
-    // Cerrar sesión
+    // Cerrar sesiï¿½n
     const logout = () => {
         setUser(null);
         setToken(null);

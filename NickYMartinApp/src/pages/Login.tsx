@@ -31,7 +31,7 @@ const Login: React.FC = () => {
             }
 
             if (data) {
-                login(data); // 👈 tu AuthContext ya lo decodifica
+                login(data);
                 navigate("/usuario");
             }
         });

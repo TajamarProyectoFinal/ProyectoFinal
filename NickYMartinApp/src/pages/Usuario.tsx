@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 const Usuario: React.FC = () => {
     const { user } = useAuth();
 
-    // Si el usuario no est� logueado, redirige a login
+    // Si el usuario no está logueado, redirige a login
     if (!user) return <Navigate to="/login" replace />;
 
     return (
@@ -16,7 +16,7 @@ const Usuario: React.FC = () => {
                     <p><strong>ID:</strong> {user.id}</p>
                     <p><strong>Nombre:</strong> {user.name}</p>
                     <p><strong>Correo:</strong> {user.email}</p>
-                    <p><strong>Rol:</strong> {user.role}</p>
+                    <p><strong>Teléfono:</strong> {user.phone}</p>
                 </div>
             </div>
         </div>
