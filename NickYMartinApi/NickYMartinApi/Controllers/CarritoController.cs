@@ -30,10 +30,8 @@ namespace NickYMartinApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCarritoItem(Guid idProducto, int cantidad, string productoMainImageUrl)
+        public async Task<IActionResult> AddCarritoItem([FromForm]Guid userId,[FromForm] Guid idProducto,[FromForm] int cantidad,[FromForm] string? productoMainImageUrl)
         {
-            Guid userId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
             Producto? producto = await _productoService.GetProducto(idProducto);
 
             if (producto != null)
@@ -50,7 +48,7 @@ namespace NickYMartinApi.Controllers
                 Carrito carrito = await _carritoService.CreateOrAddUserCarrito(userId, itemCarrito);
             }
 
-            return RedirectToAction(nameof(Index));
+            return Ok("Item agregado al carrito");
         }
 
         [HttpDelete("removeItem/{id}")]

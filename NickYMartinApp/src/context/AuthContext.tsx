@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
-    // Funci�n para loguear y guardar token
+    // Función para loguear y guardar token
     const login = (jwtToken: string) => {
         try {
             const decoded: any = jwtDecode(jwtToken);

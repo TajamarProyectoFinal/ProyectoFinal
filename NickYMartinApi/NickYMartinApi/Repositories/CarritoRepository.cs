@@ -81,7 +81,7 @@ namespace NickYMartinApi.Repositories
 
         public async Task<Carrito?> GetUserCarrito(Guid userId)
         {
-            Carrito? carrito = await _context.Carritos.FirstOrDefaultAsync(c => c.IdUsuario == userId);
+            Carrito? carrito = await _context.Carritos.Include(c => c.ItemsCarrito).ThenInclude(c => c.Producto).FirstOrDefaultAsync(c => c.IdUsuario == userId);
 
             return carrito;
         }

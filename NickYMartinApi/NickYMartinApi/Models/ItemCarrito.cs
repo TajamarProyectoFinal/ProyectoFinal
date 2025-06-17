@@ -9,6 +9,7 @@ namespace NickYMartinApi.Models
         public Guid IdItemCarrito { get; set; }
         [ForeignKey(nameof(Carrito))]
         public Guid IdCarrito { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public virtual Carrito? Carrito { get; set; }
         [ForeignKey(nameof(Producto))]
         public Guid IdProducto { get; set; }
