@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ProductosDataSource } from "../services/ProductosDataSource";
 import type { ProductoDTO } from "../types/productoDTO";
 import { ActionTypes } from "../types/ActionTypes";
+import AgregarProductoForm from "../components/AgregarProductoForm";
 
 const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
 
@@ -10,26 +11,32 @@ const ProductoDetalle: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [detalle, setDetalle] = useState<ProductoDTO | null>(null);
     const [loading, setLoading] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         if (id) {
-            productosApi.GetProductoById(id, ActionTypes.List, (data, err) => {
-                console.log("data", data)
-                if (err || !data) {
-                    console.error("Error al cargar el producto");
-                    setDetalle(null);
-                } else {
-                    setDetalle(data);
-                }
-                setLoading(false);
-            });
+            fetchProducto();
         }
     }, [id]);
+
+    const fetchProducto = () => {
+        if (!id) return;
+
+        productosApi.GetProductoById(id, ActionTypes.List, (data, err) => {
+            if (err || !data) {
+                console.error("Error al cargar el producto");
+                setDetalle(null);
+            } else {
+                setDetalle(data);
+            }
+            setLoading(false);
+        });
+    };
 
     if (loading) return <div className="text-center mt-5">Cargando...</div>;
     if (!detalle) return <div className="alert alert-danger">Producto no encontrado</div>;
 
-    const { producto, categorias, multimediasProducto } = detalle;
+    const { producto, categorias, multimediasProducto, categoriasIds } = detalle;
 
     return (
         <div className="container mt-5">
@@ -64,9 +71,38 @@ const ProductoDetalle: React.FC = () => {
                         </div>
                     )}
 
-                    <button className="btn btn-primary mt-3">Añadir al carrito</button>
+                    <button className="btn btn-primary mt-3 me-2">Añadir al carrito</button>
+                    <button className="btn btn-warning mt-3" onClick={() => setModalVisible(true)}>
+                        Editar producto
+                    </button>
                 </div>
             </div>
+
+            {modalVisible && (
+                <div className="modal fade show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Editando {producto.nombre}</h5>
+                                <button type="button" className="btn-close" onClick={() => setModalVisible(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <AgregarProductoForm
+                                    onClose={() => setModalVisible(false)}
+                                    onProductoGuardado={() => {
+                                        setModalVisible(false);
+                                        fetchProducto(); // recargar los datos tras editar
+                                    }}
+                                    modoEdicion={true}
+                                    productoInicial={producto}
+                                    productoId={producto.idProducto}
+                                    categoriasIniciales={categoriasIds ?? []}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

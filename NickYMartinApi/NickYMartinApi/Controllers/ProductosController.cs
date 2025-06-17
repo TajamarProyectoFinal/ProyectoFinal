@@ -90,34 +90,34 @@ namespace NickYMartinApi.Controllers
         }
 
         [HttpPut("{idProducto}")]
-        public async Task<IActionResult> UpdateProducto(Guid idProducto, ProductoViewModel productoVm)
+        public async Task<IActionResult> UpdateProducto(
+                Guid idProducto,
+                [FromForm] string nombre,
+                [FromForm] string descripcion,
+                [FromForm] decimal precio,
+                [FromForm] int stock,
+                [FromForm] List<IFormFile> files,
+                [FromForm] List<string> categoriasIds
+            )
         {
-            bool response = await _productoService.UpdateProducto(idProducto, productoVm.Producto, productoVm.Files, productoVm.CategoriasIds);
-            //ViewBag.CategoriasList = await GetCategoriasSelectList();
-            Producto? producto = await _productoService.GetProducto(idProducto);
-            List<Categoria> categorias = await _categoriaService.GetProductoCategorias(idProducto);
+            var producto = new Producto
+            {
+                IdProducto = idProducto,
+                Nombre = nombre,
+                Descripcion = descripcion,
+                Precio = precio,
+                Stock = stock,
+                FechaActualizacion = DateTime.UtcNow
+            };
+
+            bool response = await _productoService.UpdateProducto(idProducto, producto, files, categoriasIds);
 
             if (response)
-            {
-                //TempData["Mensaje"] = "El producto se actualizo correctamente.";
-                //TempData["TipoMensaje"] = "success";
-
-                return Ok("El producto se ha actualizado con exito");
-            }
+                return Ok("Producto actualizado correctamente");
             else
-            {
-                //TempData["Mensaje"] = "Se ha producido un error al actualizar el producto.";
-                //TempData["TipoMensaje"] = "error";
-
-                return BadRequest(new ProductoViewModel()
-                {
-                    Producto = producto,
-                    Categorias = categorias,
-                    CategoriasIds = categorias.Select(c => c.IdCategoria.ToString()).ToList(),
-                    Action = Enums.ActionTypes.Update,
-                });
-            }
+                return BadRequest("Error al actualizar el producto");
         }
+
 
         [HttpDelete("{idProducto}")]
         public async Task<IActionResult> DeleteProducto(Guid idProducto)

@@ -3,15 +3,26 @@ import type { Producto } from '../types/product';
 import type { Categoria } from '../types/category';
 import { CategoriasDataSource } from '../services/CategoriasDataSource';
 import { ProductosDataSource } from '../services/ProductosDataSource';
-import { Modal } from 'bootstrap';
+import { ActionTypes } from '../types/ActionTypes';
 
 interface Props {
     onClose: () => void;
-    onProductoCreado?: () => void;
+    onProductoGuardado?: () => void;
+    modoEdicion?: boolean;
+    productoInicial?: Partial<Producto>;
+    categoriasIniciales?: string[];
+    productoId?: string;
 }
 
-const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => {
-    const [form, setForm] = useState<Partial<Producto>>({
+const AgregarProductoForm: React.FC<Props> = ({
+    onClose,
+    onProductoGuardado,
+    modoEdicion = false,
+    productoInicial,
+    categoriasIniciales = [],
+    productoId
+}) => {
+    const [form, setForm] = useState<Partial<Producto>>(productoInicial || {
         nombre: '',
         descripcion: '',
         precio: 0,
@@ -19,7 +30,7 @@ const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => 
     });
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [selectedCategorias, setSelectedCategorias] = useState<string[]>([]);
+    const [selectedCategorias, setSelectedCategorias] = useState<string[]>(categoriasIniciales);
     const [imagenes, setImagenes] = useState<File[]>([]);
 
     useEffect(() => {
@@ -59,27 +70,35 @@ const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const productosApi = new ProductosDataSource('https://localhost:7153/api/Productos');
+
         try {
-            const productosApi = new ProductosDataSource('https://localhost:7153/api/Productos');
-            await productosApi.AddProducto(form, selectedCategorias, imagenes, (data, err) => {
-                if (err) throw err;
-            });
+            if (modoEdicion && productoId) {
+                await productosApi.UpdateProducto(productoId, form, selectedCategorias, imagenes, (data, err) => {
+                    if (err) throw err;
+                });
+                alert("Producto actualizado correctamente");
+            } else {
+                await productosApi.AddProducto(form, selectedCategorias, imagenes, (data, err) => {
+                    if (err) throw err;
+                });
+                alert("Producto creado correctamente");
+            }
 
-            alert("Producto creado correctamente");
-            setForm({ nombre: '', descripcion: '', precio: 0, stock: 0 });
-            setSelectedCategorias([]);
-            setImagenes([]);
-
-            if (onProductoCreado) onProductoCreado();
+            if (onProductoGuardado) onProductoGuardado();
             onClose();
         } catch (error) {
-            console.error("Error al agregar producto:", error);
-            alert("Error al crear producto");
+            console.error("Error al guardar producto:", error);
+            alert("Error al guardar producto");
         }
     };
 
     return (
         <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <h5 className="mb-3">
+                {/*{modoEdicion ? `Editando: ${form.nombre}` : 'Agregar nuevo producto'}*/}
+            </h5>
+
             <div className="mb-3">
                 <label className="form-label">Nombre</label>
                 <input type="text" className="form-control" name="nombre" value={form.nombre} onChange={handleChange} required />
@@ -127,7 +146,9 @@ const AgregarProductoForm: React.FC<Props> = ({ onClose, onProductoCreado }) => 
 
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-                <button type="submit" className="btn btn-success">Guardar producto</button>
+                <button type="submit" className="btn btn-success">
+                    {modoEdicion ? 'Actualizar producto' : 'Crear producto'}
+                </button>
             </div>
         </form>
     );
