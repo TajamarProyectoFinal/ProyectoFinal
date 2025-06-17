@@ -3,7 +3,7 @@ import type { Producto } from '../types/product';
 import type { Categoria } from '../types/category';
 import { CategoriasDataSource } from '../services/CategoriasDataSource';
 import { ProductosDataSource } from '../services/ProductosDataSource';
-import { ActionTypes } from '../types/ActionTypes';
+import { motion } from 'framer-motion';
 
 interface Props {
     onClose: () => void;
@@ -94,29 +94,36 @@ const AgregarProductoForm: React.FC<Props> = ({
     };
 
     return (
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <h5 className="mb-3">
-                {/*{modoEdicion ? `Editando: ${form.nombre}` : 'Agregar nuevo producto'}*/}
+        <motion.form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="animated-form"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+        >
+            <h5 className="form-title mb-4">
+                {modoEdicion ? `Editando: ${form.nombre}` : 'Agregar nuevo producto'}
             </h5>
 
             <div className="mb-3">
                 <label className="form-label">Nombre</label>
-                <input type="text" className="form-control" name="nombre" value={form.nombre} onChange={handleChange} required />
+                <input type="text" className="form-control custom-input" name="nombre" value={form.nombre} onChange={handleChange} required />
             </div>
 
             <div className="mb-3">
                 <label className="form-label">Descripción</label>
-                <textarea className="form-control" name="descripcion" value={form.descripcion} onChange={handleChange} />
+                <textarea className="form-control custom-input" name="descripcion" value={form.descripcion} onChange={handleChange} />
             </div>
 
             <div className="mb-3">
                 <label className="form-label">Precio (€)</label>
-                <input type="number" className="form-control" name="precio" value={form.precio} onChange={handleChange} required />
+                <input type="number" className="form-control custom-input" name="precio" value={form.precio} onChange={handleChange} required />
             </div>
 
             <div className="mb-3">
                 <label className="form-label">Stock</label>
-                <input type="number" className="form-control" name="stock" value={form.stock} onChange={handleChange} required />
+                <input type="number" className="form-control custom-input" name="stock" value={form.stock} onChange={handleChange} required />
             </div>
 
             <div className="mb-3">
@@ -126,31 +133,32 @@ const AgregarProductoForm: React.FC<Props> = ({
 
             <div className="mb-3">
                 <label className="form-label">Categorías</label>
-                <div className="d-flex flex-wrap">
+                <select
+                    multiple
+                    className="form-control custom-select"
+                    value={selectedCategorias}
+                    onChange={(e) => {
+                        const options = Array.from(e.target.selectedOptions).map(opt => opt.value);
+                        setSelectedCategorias(options);
+                    }}
+                >
                     {categorias.map(cat => (
-                        <div key={cat.idCategoria} className="form-check me-3">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                id={cat.idCategoria}
-                                checked={selectedCategorias.includes(cat.idCategoria)}
-                                onChange={() => handleCategoriaToggle(cat.idCategoria)}
-                            />
-                            <label className="form-check-label" htmlFor={cat.idCategoria}>
-                                {cat.nombre}
-                            </label>
-                        </div>
+                        <option key={cat.idCategoria} value={cat.idCategoria}>
+                            {cat.nombre}
+                        </option>
                     ))}
-                </div>
+                </select>
+                <small className="form-text text-muted">Mantén Ctrl o Cmd presionado para seleccionar varias</small>
             </div>
 
-            <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-                <button type="submit" className="btn btn-success">
+
+            <div className="modal-footer d-flex justify-content-end gap-2">
+                <button type="button" className="btn btn-cancel" onClick={onClose}>Cancelar</button>
+                <button type="submit" className="btn btn-save">
                     {modoEdicion ? 'Actualizar producto' : 'Crear producto'}
                 </button>
             </div>
-        </form>
+        </motion.form>
     );
 };
 

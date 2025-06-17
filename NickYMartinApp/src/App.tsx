@@ -1,5 +1,6 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
 import MainLayout from "./layouts/MainLayout";
 import Productos from "./pages/Productos";
 import Login from "./pages/Login";

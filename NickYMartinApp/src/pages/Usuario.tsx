@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Usuario: React.FC = () => {
     const { user, logout } = useAuth();
@@ -8,20 +9,28 @@ const Usuario: React.FC = () => {
     if (!user) return <Navigate to="/login" replace />;
 
     return (
-        <div className="container mt-5" style={{ maxWidth: "600px" }}>
-            <h2 className="mb-4 text-center">Perfil de usuario</h2>
-            <div className="card shadow-sm">
+        <motion.div
+            className="container mt-5"
+            style={{ maxWidth: "600px" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+        >
+            <h2 className="mb-4 text-center text-primary">Perfil de usuario</h2>
+
+            <div className="card shadow-sm border-0">
                 <div className="card-body">
-                    <p><strong>ID:</strong> {user.id}</p>
-                    <p><strong>Nombre:</strong> {user.name}</p>
-                    <p><strong>Correo:</strong> {user.email}</p>
-                    <p><strong>Teléfono:</strong> {user.phone}</p>
-                    <button className="btn btn-danger mt-3" onClick={logout}>
+                    <p className="mb-2"><strong>ID:</strong> {user.id}</p>
+                    <p className="mb-2"><strong>Nombre:</strong> {user.name}</p>
+                    <p className="mb-2"><strong>Correo:</strong> {user.email}</p>
+                    <p className="mb-3"><strong>Teléfono:</strong> {user.phone}</p>
+
+                    <button className="btn btn-logout" onClick={logout}>
                         Cerrar sesión
                     </button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

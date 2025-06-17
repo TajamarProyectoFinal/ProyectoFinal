@@ -32,12 +32,12 @@ const Productos: React.FC = () => {
                 } else if (data) {
                     setProductos(data.productos || []);
                     setTotal(data.totalResults);
-                    
                 }
                 setLoading(false);
             }
         );
     };
+
     const handleDeleteProducto = (id: string) => {
         productosApi.DeleteProducto(id, (data, err) => {
             if (err) {
@@ -45,7 +45,7 @@ const Productos: React.FC = () => {
                 console.error(err);
             } else {
                 alert("Producto eliminado.");
-                fetchProductos(); // Recarga productos
+                fetchProductos();
             }
         });
     };
@@ -60,27 +60,22 @@ const Productos: React.FC = () => {
         <>
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Catálogo de productos</h1>
-                <button
-                    className="btn btn-success"
-                    onClick={() => setModalVisible(true)}
-                >
+                <button className="btn btn-add" onClick={() => setModalVisible(true)}>
                     + Agregar producto
                 </button>
             </div>
 
-            {/* Modal controlado por React */}
             {modalVisible && (
                 <div className="modal fade show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <div className="modal-dialog modal-dialog-centered modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Nuevo producto</h5>
-                                <button type="button" className="btn-close" onClick={() => setModalVisible(false)}></button>
+                                <button type="button" className="btn-close ms-auto" onClick={() => setModalVisible(false)}></button>
                             </div>
                             <div className="modal-body">
                                 <AgregarProductoForm
                                     onClose={() => setModalVisible(false)}
-                                    onProductoCreado={() => {
+                                    onProductoGuardado={() => {
                                         fetchProductos();
                                         setModalVisible(false);
                                     }}
@@ -91,7 +86,6 @@ const Productos: React.FC = () => {
                 </div>
             )}
 
-            {/* Lista de productos */}
             {loading ? (
                 <div className="text-center mt-5">
                     <div className="spinner-border text-primary" />
@@ -106,7 +100,7 @@ const Productos: React.FC = () => {
                             <ProductCard
                                 producto={producto.producto}
                                 mainImage={producto.mainImageUrl}
-                                onDelete={handleDeleteProducto}
+                                onDelete={() => handleDeleteProducto(producto.producto.idProducto)}
                             />
                         </div>
                     ))}
@@ -115,7 +109,6 @@ const Productos: React.FC = () => {
                 <div className="alert alert-info text-center">No hay productos disponibles.</div>
             )}
 
-            {/* Paginación */}
             {totalPages > 1 && (
                 <nav className="mt-4 d-flex justify-content-center">
                     <ul className="pagination">

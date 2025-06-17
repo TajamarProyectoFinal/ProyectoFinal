@@ -4,6 +4,7 @@ import { ProductosDataSource } from "../services/ProductosDataSource";
 import type { ProductoDTO } from "../types/productoDTO";
 import { ActionTypes } from "../types/ActionTypes";
 import AgregarProductoForm from "../components/AgregarProductoForm";
+import { motion } from "framer-motion";
 
 const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
 
@@ -39,43 +40,63 @@ const ProductoDetalle: React.FC = () => {
     const { producto, categorias, multimediasProducto, categoriasIds } = detalle;
 
     return (
-        <div className="container mt-5">
+        <motion.div
+            className="container mt-5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+        >
             <Link to="/" className="btn btn-outline-secondary mb-4">← Volver</Link>
             <div className="row">
-                <div className="col-md-6">
+                <motion.div
+                    className="col-md-6"
+                    initial={{ opacity: 0, x: -15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
                     {multimediasProducto && multimediasProducto.length > 0 ? (
                         <img
                             src={multimediasProducto[0].url}
                             alt={producto.nombre}
-                            className="img-fluid"
+                            className="img-fluid rounded shadow-sm"
                             style={{ maxHeight: '400px', objectFit: 'cover' }}
                         />
                     ) : (
-                        <div className="bg-secondary text-white text-center p-5">Sin imagen</div>
+                        <div className="bg-secondary text-white text-center p-5 rounded shadow-sm">Sin imagen</div>
                     )}
-                </div>
-                <div className="col-md-6">
-                    <h2>{producto.nombre}</h2>
+                </motion.div>
+
+                <motion.div
+                    className="col-md-6"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <h2 className="text-primary mb-3">{producto.nombre}</h2>
                     <p><strong>Precio:</strong> {producto.precio.toFixed(2)}€</p>
                     <p><strong>Stock:</strong> {producto.stock}</p>
-                    <p>{producto.descripcion}</p>
+                    <p className="text-muted">{producto.descripcion}</p>
 
                     {categorias && (
                         <div className="mt-3">
-                            <strong>Categorías:</strong>
-                            <ul>
+                            <strong className="d-block mb-2">Categorías:</strong>
+                            <div className="d-flex flex-wrap gap-2">
                                 {categorias.map(cat => (
-                                    <li key={cat.idCategoria}>{cat.nombre}</li>
+                                    <span key={cat.idCategoria} className="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                                        {cat.nombre}
+                                    </span>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     )}
 
-                    <button className="btn btn-primary mt-3 me-2">Añadir al carrito</button>
-                    <button className="btn btn-warning mt-3" onClick={() => setModalVisible(true)}>
-                        Editar producto
-                    </button>
-                </div>
+                    <div className="mt-4 d-flex gap-2">
+                        <button className="btn btn-primary">Añadir al carrito</button>
+                        <button className="btn btn-warning" onClick={() => setModalVisible(true)}>
+                            Editar producto
+                        </button>
+                    </div>
+                </motion.div>
             </div>
 
             {modalVisible && (
@@ -103,7 +124,7 @@ const ProductoDetalle: React.FC = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 };
 
