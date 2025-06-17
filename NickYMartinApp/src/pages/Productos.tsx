@@ -38,10 +38,20 @@ const Productos: React.FC = () => {
             }
         );
     };
+    const handleDeleteProducto = (id: string) => {
+        productosApi.DeleteProducto(id, (data, err) => {
+            if (err) {
+                alert("Error al borrar el producto.");
+                console.error(err);
+            } else {
+                alert("Producto eliminado.");
+                fetchProductos(); // Recarga productos
+            }
+        });
+    };
 
     useEffect(() => {
         fetchProductos();
-        localStorage.clear();
     }, [page]);
 
     const totalPages = Math.ceil(total / 6);
@@ -93,7 +103,11 @@ const Productos: React.FC = () => {
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     {productos.map((producto) => (
                         <div key={producto.producto.idProducto} className="col">
-                            <ProductCard producto={producto.producto} mainImage={producto.mainImageUrl} />
+                            <ProductCard
+                                producto={producto.producto}
+                                mainImage={producto.mainImageUrl}
+                                onDelete={handleDeleteProducto}
+                            />
                         </div>
                     ))}
                 </div>

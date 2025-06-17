@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const MainLayout: React.FC = () => {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
 
     return (
         <div className="d-flex flex-column min-vh-100">
@@ -10,6 +10,7 @@ const MainLayout: React.FC = () => {
                 <nav className="navbar navbar-expand-lg navbar-light container-fluid">
                     <div className="container">
                         <Link className="navbar-brand fw-bold me-4" to="/">Nickymartin</Link>
+
                         <button
                             className="navbar-toggler"
                             type="button"
@@ -33,6 +34,7 @@ const MainLayout: React.FC = () => {
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/carrito">Carrito</Link>
                                 </li>
+
                                 {!user ? (
                                     <>
                                         <li className="nav-item">
@@ -43,22 +45,10 @@ const MainLayout: React.FC = () => {
                                         </li>
                                     </>
                                 ) : (
-                                    <li className="nav-item dropdown">
-                                        <a
-                                            className="nav-link dropdown-toggle"
-                                            href="#"
-                                            id="userDropdown"
-                                            role="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="true"
-                                        >
+                                    <li className="nav-item">
+                                        <Link className="nav-link fw-semibold" to="/usuario">
                                             Hola, {user.name}
-                                        </a>
-                                        <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                            <li><Link className="dropdown-item" to="/usuario">Información de usuario</Link></li>
-                                            <li><hr className="dropdown-divider" /></li>
-                                            <li><button className="dropdown-item" onClick={logout}>Cerrar sesión</button></li>
-                                        </ul>
+                                        </Link>
                                     </li>
                                 )}
                             </ul>
