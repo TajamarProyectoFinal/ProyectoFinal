@@ -1,73 +1,109 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
 
 const MainLayout: React.FC = () => {
     const { user } = useAuth();
+    const location = useLocation();
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            <header className="bg-white shadow-sm">
-                <nav className="navbar navbar-expand-lg navbar-light container-fluid">
-                    <div className="container">
-                        <Link className="navbar-brand fw-bold me-4" to="/">Nickymartin</Link>
+            {/* Header */}
+            <motion.header
+                className="bg-white shadow-sm"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <nav className="navbar navbar-expand-lg container">
+                    <Link className="navbar-brand fw-bold text-primary" to="/">
+                        Nickymartin
+                    </Link>
 
-                        <button
-                            className="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav"
-                            aria-controls="navbarNav"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation"
-                        >
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
 
-                        <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
-                            <ul className="navbar-nav">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/">Inicio</Link>
-                                </li>
-                            </ul>
+                    <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
+                        <ul className="navbar-nav gap-2">
+                            <li className="nav-item">
+                                <Link
+                                    className={`nav-link custom-nav-link ${location.pathname === "/" ? "active" : ""
+                                        }`}
+                                    to="/"
+                                >
+                                    Inicio
+                                </Link>
+                            </li>
+                        </ul>
 
-                            <ul className="navbar-nav">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/carrito">Carrito</Link>
-                                </li>
+                        <ul className="navbar-nav gap-2">
+                            <li className="nav-item">
+                                <Link
+                                    className={`nav-link custom-nav-link ${location.pathname === "/carrito" ? "active" : ""
+                                        }`}
+                                    to="/carrito"
+                                >
+                                    Carrito
+                                </Link>
+                            </li>
 
-                                {!user ? (
-                                    <>
-                                        <li className="nav-item">
-                                            <Link className="nav-link" to="/login">Iniciar sesión</Link>
-                                        </li>
-                                        <li className="nav-item">
-                                            <Link className="nav-link" to="/register">Registrarse</Link>
-                                        </li>
-                                    </>
-                                ) : (
+                            {!user ? (
+                                <>
                                     <li className="nav-item">
-                                        <Link className="nav-link fw-semibold" to="/usuario">
-                                            Hola, {user.name}
+                                        <Link className="nav-link custom-nav-link" to="/login">
+                                            Iniciar sesión
                                         </Link>
                                     </li>
-                                )}
-                            </ul>
-                        </div>
+                                    <li className="nav-item">
+                                        <Link className="nav-link custom-nav-link" to="/register">
+                                            Registrarse
+                                        </Link>
+                                    </li>
+                                </>
+                            ) : (
+                                <li className="nav-item">
+                                    <Link className="nav-link custom-nav-link fw-semibold" to="/usuario">
+                                        Hola, {user.name}
+                                    </Link>
+                                </li>
+                            )}
+                        </ul>
                     </div>
                 </nav>
-            </header>
+            </motion.header>
 
+            {/* Main */}
             <main className="flex-grow-1 py-4">
-                <div className="container">
+                <motion.div
+                    className="container"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                >
                     <Outlet />
-                </div>
+                </motion.div>
             </main>
 
-            <footer className="bg-light text-center py-3 text-muted border-top mt-auto">
+            {/* Footer */}
+            <motion.footer
+                className="bg-light text-center py-3 text-muted border-top mt-auto"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+            >
                 <div className="container">
                     © 2025 Nickymartin. Todos los derechos reservados.
                 </div>
-            </footer>
+            </motion.footer>
         </div>
     );
 };

@@ -1,43 +1,192 @@
-/*#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+    --color-primario: #6366f1;
+    --color-secundario: #f59e0b;
+    --color-texto: #1f2937;
+    --color-fondo: #f9fafb;
+    --radius: 12px;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --transicion: all 0.3s ease-in-out;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Formulario animado */
+.animated-form {
+    animation: fadeIn 0.3s ease;
+    padding: 1rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Título */
+.form-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-primario);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Inputs */
+.custom-input {
+    border-radius: var(--radius);
+    transition: var(--transicion);
 }
 
-.card {
-  padding: 2em;
+    .custom-input:focus {
+        border-color: var(--color-primario);
+        box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        outline: none;
+    }
+
+/* Chips de categoría */
+.category-chip {
+    background-color: #f3f4f6;
+    border-radius: var(--radius);
+    padding: 0.3rem 0.8rem;
+    transition: var(--transicion);
 }
 
-.read-the-docs {
-  color: #888;
+    .category-chip:hover {
+        background-color: var(--color-secundario);
+        color: white;
+    }
+
+/* Botones */
+.btn-add {
+    background-color: var(--color-primario);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+    border: none;
 }
-*/
+
+    .btn-add:hover {
+        background-color: #4f46e5;
+    }
+
+.btn-cancel {
+    background-color: #e5e7eb;
+    color: var(--color-texto);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+}
+
+    .btn-cancel:hover {
+        background-color: #d1d5db;
+    }
+
+.btn-save {
+    background-color: var(--color-primario);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+}
+
+    .btn-save:hover {
+        background-color: #4f46e5;
+    }
+
+/* Animación */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.custom-select {
+    border-radius: var(--radius);
+    padding: 0.6rem;
+    transition: var(--transicion);
+    height: auto;
+    min-height: 120px;
+}
+
+    .custom-select:focus {
+        border-color: var(--color-primario);
+        box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        outline: none;
+    }
+/* Botones */
+.btn-primary {
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+}
+
+    .btn-primary:hover {
+        background-color: #4f46e5;
+    }
+
+.btn-warning {
+    background-color: #f59e0b;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+}
+
+    .btn-warning:hover {
+        background-color: #d97706;
+    }
+
+/* Badge categoría */
+.badge {
+    font-size: 0.9rem;
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+}
+.btn-outline-secondary {
+    border: 1px solid #d1d5db;
+    color: var(--color-texto);
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+}
+
+    .btn-outline-secondary:hover {
+        background-color: #f3f4f6;
+        color: var(--color-primario);
+        border-color: var(--color-primario);
+    }
+
+.heading-main {
+    color: var(--color-texto);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+/* Navegación personalizada */
+.custom-nav-link {
+    color: var(--color-texto);
+    transition: var(--transicion);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.75rem;
+}
+
+    .custom-nav-link:hover,
+    .custom-nav-link.active {
+        background-color: var(--color-primario);
+        color: white !important;
+    }
+.btn-logout {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: var(--radius);
+    transition: var(--transicion);
+}
+
+    .btn-logout:hover {
+        background-color: #dc2626;
+    }
