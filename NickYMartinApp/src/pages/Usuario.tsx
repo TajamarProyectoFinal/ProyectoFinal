@@ -13,6 +13,7 @@ const Usuario: React.FC = () => {
             <h2 className="mb-4 text-center">Perfil de usuario</h2>
             <div className="card shadow-sm">
                 <div className="card-body">
+                    <p><strong>ID:</strong> {user.id}</p>
                     <p><strong>Nombre:</strong> {user.name}</p>
                     <p><strong>Correo:</strong> {user.email}</p>
                     <p><strong>Teléfono:</strong> {user.phone}</p>
