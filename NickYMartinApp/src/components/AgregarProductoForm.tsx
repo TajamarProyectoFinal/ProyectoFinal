@@ -3,6 +3,7 @@ import type { Producto } from '../types/product';
 import type { Categoria } from '../types/category';
 import { CategoriasDataSource } from '../services/CategoriasDataSource';
 import { ProductosDataSource } from '../services/ProductosDataSource';
+import { Modal } from 'bootstrap';
 
 interface Props {
     onClose: () => void;
