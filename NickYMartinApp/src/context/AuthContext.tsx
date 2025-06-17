@@ -21,10 +21,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const login = (jwtToken: string) => {
         try {
             const decoded: any = jwtDecode(jwtToken);
+            console.log(decoded)
             const newUser: User = {
                 id: decoded.sub,
                 name: decoded.name,
                 email: decoded.email,
+                phone: decoded.phone,
                 role: decoded.role,
             };
 
