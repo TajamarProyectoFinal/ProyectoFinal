@@ -17,6 +17,10 @@ const CarritoView = () => {
     const carritoDataSourceRef = useRef(new CarritoDataSource("https://localhost:7153/api/Carrito"));
     const carritoDataSource = carritoDataSourceRef.current; // Access the current instance
 
+    const handleCreatePedido = () => {
+
+    }
+
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -152,7 +156,7 @@ const CarritoView = () => {
             </div>
             <div className="row justify-content-end mt-4">
                 <div className="col-auto">
-                    <button className="btn btn-success btn-lg">Confirmar Pedido</button>
+                    <button className="btn btn-success btn-lg" onClick={() => handleCreatePedido(carrito)}>Confirmar Pedido</button>
                 </div>
             </div>
         </div>

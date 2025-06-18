@@ -9,6 +9,7 @@ namespace NickYMartinApi.Models
         public Guid IdDetalle { get; set; }
         [ForeignKey(nameof(Pedido))]
         public Guid IdPedido { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public virtual Pedido? Pedido { get; set; }
         [ForeignKey(nameof(Producto))]
         public Guid IdProducto { get; set; }

@@ -74,6 +74,10 @@ builder.Services.AddScoped<ICarritoRepository, CarritoRepository>();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPedidosRepository, PedidosRepository>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<IDireccionesRepository, DireccionesRepository>();
+builder.Services.AddScoped<IDireccionService, DireccionService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
