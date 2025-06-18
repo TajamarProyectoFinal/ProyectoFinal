@@ -103,8 +103,8 @@ const Productos: React.FC = () => {
                                 <AgregarProductoForm
                                     onClose={() => setModalVisible(false)}
                                     onProductoGuardado={() => {
-                                        fetchProductos();
                                         setModalVisible(false);
+                                        fetchProductos();
                                     }}
                                 />
                             </div>

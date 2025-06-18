@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Usuario from "./pages/Usuario";
 import ProductoDetalle from "./pages/ProductoDetalle";
 import CarritoView from "./pages/Carrito";
+import PagoResultado from "./pages/PagoResultado";
 
 function App() {
     return (
@@ -19,7 +20,8 @@ function App() {
                     <Route path="register" element={<Register />} />
                     <Route path="usuario" element={<Usuario />} />
                     <Route path="productos/:id" element={<ProductoDetalle />} />
-                    <Route path="carrito" element={<CarritoView /> } />
+                    <Route path="carrito" element={<CarritoView />} />
+                    <Route path="pago-resultado" element={<PagoResultado />} />
                 </Route>
             </Routes>
         </BrowserRouter>
