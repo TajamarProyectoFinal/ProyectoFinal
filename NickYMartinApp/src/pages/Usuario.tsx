@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Direcciones from "../components/Direcciones";
 
 const Usuario: React.FC = () => {
     const { user, logout } = useAuth();
@@ -31,7 +32,9 @@ const Usuario: React.FC = () => {
                     </button>
                 </div>
             </div>
+            <Direcciones />
         </motion.div>
+
     );
 };
 
