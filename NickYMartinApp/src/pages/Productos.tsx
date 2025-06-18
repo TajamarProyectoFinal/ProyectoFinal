@@ -4,16 +4,20 @@ import { ProductosDataSource } from "../services/ProductosDataSource";
 import type { ProductosCategorias } from "../types/product";
 import { SearchTypes } from "../types/SearchTypes";
 import AgregarProductoForm from "../components/AgregarProductoForm";
+import { useAuth } from "../context/AuthContext";
 
 const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
 
 const Productos: React.FC = () => {
     const [productos, setProductos] = useState<ProductosCategorias[]>([]);
     const [page, setPage] = useState(1);
+    const [resultsPerPage, setResultsPerPage] = useState(4);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const { user } = useAuth();
+    const isAdmin = user?.role === "Admin";
 
     const fetchProductos = () => {
         setLoading(true);
@@ -21,7 +25,7 @@ const Productos: React.FC = () => {
 
         productosApi.GetData(
             page,
-            6,
+            resultsPerPage,
             {},
             SearchTypes.List,
             (data, err) => {
@@ -52,17 +56,40 @@ const Productos: React.FC = () => {
 
     useEffect(() => {
         fetchProductos();
-    }, [page]);
+    }, [page, resultsPerPage]);
 
-    const totalPages = Math.ceil(total / 6);
+    const totalPages = Math.ceil(total / resultsPerPage);
 
     return (
         <>
-            <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
                 <h1>Catálogo de productos</h1>
-                <button className="btn btn-add" onClick={() => setModalVisible(true)}>
-                    + Agregar producto
-                </button>
+
+                <div className="d-flex align-items-center gap-2">
+                    <label htmlFor="resultsPerPage" className="form-label m-0">Productos por página:</label>
+                    <select
+                        id="resultsPerPage"
+                        className="form-select"
+                        style={{ width: "100px" }}
+                        value={resultsPerPage}
+                        onChange={(e) => {
+                            setResultsPerPage(Number(e.target.value));
+                            setPage(1); // Reiniciar a la primera página
+                        }}
+                    >
+                        <option value={4}>4</option>
+                        <option value={8}>8</option>
+                        <option value={12}>12</option>
+                        <option value={24}>24</option>
+                        <option value={48}>48</option>
+                    </select>
+
+                    {isAdmin && (
+                        <button className="btn btn-add ms-3" onClick={() => setModalVisible(true)}>
+                            + Agregar producto
+                        </button>
+                    )}
+                </div>
             </div>
 
             {modalVisible && (
@@ -100,7 +127,7 @@ const Productos: React.FC = () => {
                             <ProductCard
                                 producto={producto.producto}
                                 mainImage={producto.mainImageUrl}
-                                onDelete={() => handleDeleteProducto(producto.producto.idProducto)}
+                                onDelete={isAdmin ? () => handleDeleteProducto(producto.producto.idProducto) : undefined}
                             />
                         </div>
                     ))}

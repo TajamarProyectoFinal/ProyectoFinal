@@ -5,11 +5,14 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext.tsx';
+import { CarritoProvider } from './context/CarritoContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <AuthProvider>
-            <App />
+            <CarritoProvider>
+                <App />
+            </CarritoProvider>
         </AuthProvider>
-  </StrictMode>,
+    </StrictMode>,
 )

@@ -5,6 +5,7 @@ import type { ProductoDTO } from "../types/productoDTO";
 import { ActionTypes } from "../types/ActionTypes";
 import AgregarProductoForm from "../components/AgregarProductoForm";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 const productosApi = new ProductosDataSource("https://localhost:7153/api/Productos");
 
@@ -13,6 +14,8 @@ const ProductoDetalle: React.FC = () => {
     const [detalle, setDetalle] = useState<ProductoDTO | null>(null);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
+    const { user } = useAuth();
+    const isAdmin = user?.role === "Admin";
 
     useEffect(() => {
         if (id) {
@@ -92,9 +95,11 @@ const ProductoDetalle: React.FC = () => {
 
                     <div className="mt-4 d-flex gap-2">
                         <button className="btn btn-primary">Añadir al carrito</button>
-                        <button className="btn btn-warning" onClick={() => setModalVisible(true)}>
-                            Editar producto
-                        </button>
+                        {isAdmin && (
+                            <button className="btn btn-warning" onClick={() => setModalVisible(true)}>
+                                Editar producto
+                            </button>
+                        )}
                     </div>
                 </motion.div>
             </div>
@@ -112,7 +117,7 @@ const ProductoDetalle: React.FC = () => {
                                     onClose={() => setModalVisible(false)}
                                     onProductoGuardado={() => {
                                         setModalVisible(false);
-                                        fetchProducto(); // recargar los datos tras editar
+                                        fetchProducto();
                                     }}
                                     modoEdicion={true}
                                     productoInicial={producto}
