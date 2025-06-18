@@ -18,7 +18,7 @@ namespace NickYMartinApi.Controllers
             _pedidoService = pedidoService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{idPedido}")]
         public async Task<IActionResult> PedidoDetalles(Guid idPedido)
         {
             Pedido? pedido = await _pedidoService.GetPedido(idPedido);
@@ -29,13 +29,13 @@ namespace NickYMartinApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPedido([FromForm]Guid userId,[FromForm] Guid idDireccion)
         {
-            bool response = await _pedidoService.AddPedido(userId, idDireccion);
+            Pedido? pedido = await _pedidoService.AddPedido(userId, idDireccion);
 
-            if (!response) {
+            if (pedido == null) {
                 BadRequest("No se ha podido agregar el pedido");
             }
 
-            return Ok("pedido añadido correctamente");
+            return Ok(pedido);
         }
 
         [HttpGet]

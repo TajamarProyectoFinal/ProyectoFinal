@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NickYMartinApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicio : Migration
+    public partial class inicio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,7 +45,7 @@ namespace NickYMartinApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Role",
+                name: "Roles",
                 columns: table => new
                 {
                     RolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -53,7 +53,7 @@ namespace NickYMartinApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.RolId);
+                    table.PrimaryKey("PK_Roles", x => x.RolId);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,9 +120,9 @@ namespace NickYMartinApi.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Role_RoleId",
+                        name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Role",
+                        principalTable: "Roles",
                         principalColumn: "RolId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -289,7 +289,7 @@ namespace NickYMartinApi.Migrations
                 columns: table => new
                 {
                     IdPedido = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Numero = table.Column<int>(type: "int", nullable: false),
+                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdUsuario = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IdDireccion = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -375,7 +375,7 @@ namespace NickYMartinApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Role",
+                table: "Roles",
                 columns: new[] { "RolId", "NombreRol" },
                 values: new object[,]
                 {
@@ -411,9 +411,9 @@ namespace NickYMartinApi.Migrations
                 columns: new[] { "Id", "Email", "Name", "PasswordHash", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"), "laura.gomez@gmail.com", "Laura Gomez", "AQAAAAIAAYagAAAAENv6M4x7I6UKhWzpBrHzvmW8CDIlInURI5x/d2HVa5JX4pE69jGYdZZpuw2SIUstuw==", null, new Guid("e9a2b3c4-5d6f-4a8b-9c1d-2e4f6a8b7c93") },
-                    { new Guid("b8d7e9f0-1a2b-4c3d-8e5f-7a9b1c3d5e7f"), "admin@nickymartin.com", "Paco Revilla", "AQAAAAIAAYagAAAAEPEW2PF7yGoOyzC0wy56FDwF/hVLL64RN+yn4UHxdSbGA+tDZ20jPFQ8SP52TYQJqQ==", null, new Guid("a7b9c28d-456e-4f1a-b890-3c5d6e7f8a91") },
-                    { new Guid("f0e1d2c3-4b5a-8d6e-9c1f-2a3b4c5d6e7f"), "lucia.sanchiz@nickymartin.com", "Marta Gonzalez", "AQAAAAIAAYagAAAAECFnoXQyXGlkW80+0hgcKyauw6Q4RgczIYa+aWqaBGfRqyh/pXdwgu1vFdfBjQ/ICQ==", null, new Guid("1c3f5e7a-8b9d-4e2c-9a3b-6f8d7c5e3a21") }
+                    { new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"), "laura.gomez@gmail.com", "Laura Gomez", "AQAAAAIAAYagAAAAEEmsXx6ToMcEX2xiskUFwYxi2dcC6LChHVgoy+9QFY+rGpL4v8Z3rSsxmZ5YnsaoiA==", null, new Guid("e9a2b3c4-5d6f-4a8b-9c1d-2e4f6a8b7c93") },
+                    { new Guid("b8d7e9f0-1a2b-4c3d-8e5f-7a9b1c3d5e7f"), "admin@nickymartin.com", "Paco Revilla", "AQAAAAIAAYagAAAAEI4teKyRLWGw0IE8AqeyRE79Mr8zKNoeMXArw/P5f7EQNqG3PGEVdY8twax2lOZZKw==", null, new Guid("a7b9c28d-456e-4f1a-b890-3c5d6e7f8a91") },
+                    { new Guid("f0e1d2c3-4b5a-8d6e-9c1f-2a3b4c5d6e7f"), "lucia.sanchiz@nickymartin.com", "Marta Gonzalez", "AQAAAAIAAYagAAAAEBzupCJlqa3R2Sz8Vo0hTqm7T9IG1lXN3YIlf2coB53B1VDTpRjKrjsjM1/LLw0MDA==", null, new Guid("1c3f5e7a-8b9d-4e2c-9a3b-6f8d7c5e3a21") }
                 });
 
             migrationBuilder.InsertData(
@@ -430,8 +430,8 @@ namespace NickYMartinApi.Migrations
                 columns: new[] { "IdPedido", "Estado", "FechaCreacion", "IdDireccion", "IdUsuario", "Numero", "Total" },
                 values: new object[,]
                 {
-                    { new Guid("2f3e4d5c-6b7a-8f9e-0d1c-2b3a4f5e6d7c"), "Pendiente", new DateTime(2025, 6, 13, 19, 49, 1, 52, DateTimeKind.Local).AddTicks(6413), new Guid("2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"), new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"), 1, 45.99m },
-                    { new Guid("d0c1e2f3-a4b5-c6d7-e8f9-a0b1c2d3e4f5"), "Enviado", new DateTime(2025, 6, 9, 19, 49, 1, 54, DateTimeKind.Local).AddTicks(7504), new Guid("2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"), new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"), 2, 89.50m }
+                    { new Guid("2f3e4d5c-6b7a-8f9e-0d1c-2b3a4f5e6d7c"), "Pendiente", new DateTime(2025, 6, 17, 14, 15, 40, 288, DateTimeKind.Local).AddTicks(7894), new Guid("2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"), new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"), "1", 45.99m },
+                    { new Guid("d0c1e2f3-a4b5-c6d7-e8f9-a0b1c2d3e4f5"), "Enviado", new DateTime(2025, 6, 13, 14, 15, 40, 290, DateTimeKind.Local).AddTicks(8309), new Guid("2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"), new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"), "2", 89.50m }
                 });
 
             migrationBuilder.InsertData(
@@ -584,7 +584,7 @@ namespace NickYMartinApi.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Role");
+                name: "Roles");
         }
     }
 }

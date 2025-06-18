@@ -12,8 +12,8 @@ using NickYMartinApi.Data;
 namespace NickYMartinApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250614174901_Inicio")]
-    partial class Inicio
+    [Migration("20250618121540_inicio")]
+    partial class inicio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -386,8 +386,8 @@ namespace NickYMartinApi.Migrations
                     b.Property<Guid?>("IdUsuario")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
+                    b.Property<string>("Numero")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(18, 2)
@@ -406,20 +406,20 @@ namespace NickYMartinApi.Migrations
                         {
                             IdPedido = new Guid("2f3e4d5c-6b7a-8f9e-0d1c-2b3a4f5e6d7c"),
                             Estado = "Pendiente",
-                            FechaCreacion = new DateTime(2025, 6, 13, 19, 49, 1, 52, DateTimeKind.Local).AddTicks(6413),
+                            FechaCreacion = new DateTime(2025, 6, 17, 14, 15, 40, 288, DateTimeKind.Local).AddTicks(7894),
                             IdDireccion = new Guid("2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"),
                             IdUsuario = new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"),
-                            Numero = 1,
+                            Numero = "1",
                             Total = 45.99m
                         },
                         new
                         {
                             IdPedido = new Guid("d0c1e2f3-a4b5-c6d7-e8f9-a0b1c2d3e4f5"),
                             Estado = "Enviado",
-                            FechaCreacion = new DateTime(2025, 6, 9, 19, 49, 1, 54, DateTimeKind.Local).AddTicks(7504),
+                            FechaCreacion = new DateTime(2025, 6, 13, 14, 15, 40, 290, DateTimeKind.Local).AddTicks(8309),
                             IdDireccion = new Guid("2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"),
                             IdUsuario = new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"),
-                            Numero = 2,
+                            Numero = "2",
                             Total = 89.50m
                         });
                 });
@@ -687,7 +687,7 @@ namespace NickYMartinApi.Migrations
 
                     b.HasKey("RolId");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -742,7 +742,7 @@ namespace NickYMartinApi.Migrations
                             Id = new Guid("b8d7e9f0-1a2b-4c3d-8e5f-7a9b1c3d5e7f"),
                             Email = "admin@nickymartin.com",
                             Name = "Paco Revilla",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPEW2PF7yGoOyzC0wy56FDwF/hVLL64RN+yn4UHxdSbGA+tDZ20jPFQ8SP52TYQJqQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI4teKyRLWGw0IE8AqeyRE79Mr8zKNoeMXArw/P5f7EQNqG3PGEVdY8twax2lOZZKw==",
                             RoleId = new Guid("a7b9c28d-456e-4f1a-b890-3c5d6e7f8a91")
                         },
                         new
@@ -750,7 +750,7 @@ namespace NickYMartinApi.Migrations
                             Id = new Guid("f0e1d2c3-4b5a-8d6e-9c1f-2a3b4c5d6e7f"),
                             Email = "lucia.sanchiz@nickymartin.com",
                             Name = "Marta Gonzalez",
-                            PasswordHash = "AQAAAAIAAYagAAAAECFnoXQyXGlkW80+0hgcKyauw6Q4RgczIYa+aWqaBGfRqyh/pXdwgu1vFdfBjQ/ICQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBzupCJlqa3R2Sz8Vo0hTqm7T9IG1lXN3YIlf2coB53B1VDTpRjKrjsjM1/LLw0MDA==",
                             RoleId = new Guid("1c3f5e7a-8b9d-4e2c-9a3b-6f8d7c5e3a21")
                         },
                         new
@@ -758,7 +758,7 @@ namespace NickYMartinApi.Migrations
                             Id = new Guid("a9b8c7d6-2e3f-4a5b-8c9d-1e2f3a4b5c6d"),
                             Email = "laura.gomez@gmail.com",
                             Name = "Laura Gomez",
-                            PasswordHash = "AQAAAAIAAYagAAAAENv6M4x7I6UKhWzpBrHzvmW8CDIlInURI5x/d2HVa5JX4pE69jGYdZZpuw2SIUstuw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEmsXx6ToMcEX2xiskUFwYxi2dcC6LChHVgoy+9QFY+rGpL4v8Z3rSsxmZ5YnsaoiA==",
                             RoleId = new Guid("e9a2b3c4-5d6f-4a8b-9c1d-2e4f6a8b7c93")
                         });
                 });

@@ -21,12 +21,13 @@ namespace NickYMartinApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IPedidoService _pedidoService;
 
         // Declara las instancias de los managers de Redsys
         private readonly MerchantParametersManager _merchantParametersManager;
         private readonly SignatureManager _signatureManager;
 
-        public PaymentController(ApplicationDbContext context, IConfiguration configuration)
+        public PaymentController(ApplicationDbContext context, IConfiguration configuration, IPedidoService pedidoService)
         {
             _context = context;
             _configuration = configuration;
@@ -35,15 +36,21 @@ namespace NickYMartinApi.Controllers
             // Por lo que vimos en el explorador de objetos, no requieren parámetros en su constructor.
             _merchantParametersManager = new MerchantParametersManager();
             _signatureManager = new SignatureManager();
+            _pedidoService = pedidoService;
         }
 
 
         // POST: api/Payment/GenerateRedsysData
         // Este método recibe la solicitud de compra y genera los datos para Redsys
         [HttpPost("GenerateRedsysData")]
-        public async Task<ActionResult<RedsysPaymentDataDto>> GenerateRedsysData([FromBody] PurchaseRequestDto purchaseRequest)
+        public async Task<ActionResult<RedsysPaymentDataDto>> GenerateRedsysData([FromForm]Guid idPedido)
         {
-            decimal totalAmountDecimal = 0;
+            Pedido? pedido =  await _pedidoService.GetPedido(idPedido);
+
+            if (pedido == null)
+            {
+                BadRequest("No se ha podido confirmar el pedido");
+            }
 
             string merchantCode = _configuration["Redsys:MerchantCode"] ?? throw new InvalidOperationException("Redsys:MerchantCode no configurado.");
             string terminal = _configuration["Redsys:Terminal"] ?? throw new InvalidOperationException("Redsys:Terminal no configurado.");
@@ -54,11 +61,9 @@ namespace NickYMartinApi.Controllers
 
             //LLamar a servicio Pedidos Y Crear pedido
 
-            //string redsysOrderId = order.OrderId.ToString("N").Substring(0, 12);
-            //order.RedsysOrderId = redsysOrderId;
+            string redsysOrderId = pedido.IdPedido.ToString("N").Substring(0, 12);
+            pedido.Numero = redsysOrderId;
 
-            string redsysOrderId = "";
-            Pedido pedido = new Pedido();
             // --- Generación de parámetros y firma usando RedsysTpv.NetStandard ---
             string dsMerchantMerchantUrl = _configuration["Redsys:MerchantNotificationUrl"] ?? string.Empty;
 
@@ -67,7 +72,7 @@ namespace NickYMartinApi.Controllers
                 merchantCode,
                 terminal,
                 TransactionType.Authorization,
-                totalAmountDecimal,
+                pedido.Total,
                 Currency.EUR,
                 redsysOrderId,
                 dsMerchantMerchantUrl,

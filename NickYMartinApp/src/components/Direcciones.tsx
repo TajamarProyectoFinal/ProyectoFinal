@@ -3,7 +3,14 @@ import { useAuth } from "../context/AuthContext";
 import { DireccionDataSource } from "../services/DireccionDataSource";
 import type { Direccion } from "../types/Direccion";
 
-const Direcciones: React.FC = () => {
+// Define las props que el componente Direcciones puede recibir
+interface DireccionesProps {
+    // Callback que se ejecutará cuando se añada una nueva dirección.
+    // Recibe la dirección completa que acaba de ser añadida.
+    onAddressAdded?: (newAddress: Direccion) => void;
+}
+
+const Direcciones: React.FC<DireccionesProps> = ({ onAddressAdded }) => {
     const { user, token } = useAuth();
     const [direcciones, setDirecciones] = useState<Direccion[]>([]);
     const [form, setForm] = useState<Omit<Direccion, "idDireccion">>({
@@ -26,7 +33,7 @@ const Direcciones: React.FC = () => {
 
     useEffect(() => {
         cargarDirecciones();
-    }, []);
+    }, [user, token]); // Añadimos 'user' y 'token' a las dependencias del useEffect
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -38,8 +45,14 @@ const Direcciones: React.FC = () => {
 
     const agregarDireccion = async () => {
         if (!user) return;
-        await api.agregarDireccion({ ...form, idUsuario: user.id });
+        // La API de agregarDireccion debería devolver la dirección completa,
+        // incluyendo el idDireccion generado por el backend.
+        const newAddress = await api.agregarDireccion({ ...form, idUsuario: user.id });
+
+        // Recargamos todas las direcciones para actualizar la lista en la UI
         await cargarDirecciones();
+
+        // Limpiamos el formulario después de agregar la dirección
         setForm({
             idUsuario: user.id,
             domicilio: "",
@@ -49,6 +62,11 @@ const Direcciones: React.FC = () => {
             pais: "",
             principal: false,
         });
+
+        // Si se proporcionó un callback, lo llamamos con la nueva dirección
+        if (onAddressAdded) {
+            onAddressAdded(newAddress);
+        }
     };
 
     const eliminarDireccion = async (idDireccion: string) => {
@@ -76,7 +94,6 @@ const Direcciones: React.FC = () => {
                         >
                             Eliminar
                         </button>
-
                     </li>
                 ))}
             </ul>
@@ -96,7 +113,8 @@ const Direcciones: React.FC = () => {
                     <input className="form-control" placeholder="País" name="pais" value={form.pais} onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
-                    <input type="number" className="form-control" placeholder="Código Postal" name="codigoPostal" value={form.codigoPostal} onChange={handleChange} />
+                    {/* Asegúrate de manejar el valor de codigoPostal para evitar "0" inicial */}
+                    <input type="number" className="form-control" placeholder="Código Postal" name="codigoPostal" value={form.codigoPostal === 0 ? "" : form.codigoPostal} onChange={handleChange} />
                 </div>
                 <div className="col-md-6 d-flex align-items-center">
                     <label className="form-check-label me-2">¿Principal?</label>

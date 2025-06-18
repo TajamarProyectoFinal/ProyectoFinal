@@ -18,10 +18,11 @@ export class DireccionDataSource {
         return res.data;
     }
 
-    async agregarDireccion(direccion: Direccion): Promise<void> {
-        await axios.post(`${BASE_URL}/direccion`, direccion, {
+    async agregarDireccion(direccion: Direccion): Promise<Direccion> {
+        const res = await axios.post(`${BASE_URL}/direccion`, direccion, {
             headers: this.headers(),
         });
+        return res.data;
     }
 
     async eliminarDireccion(idDireccion: string): Promise<void> {
