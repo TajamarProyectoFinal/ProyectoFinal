@@ -10,21 +10,29 @@ import ProductoDetalle from "./pages/ProductoDetalle";
 import CarritoView from "./pages/Carrito";
 import PagoResultado from "./pages/PagoResultado";
 import PedidoView from "./pages/Pedido";
+import NotFoundPage from "./pages/NotFoundPage";
+import PagoExitoView from "./pages/PagoExitoView";
+import PagoErrorView from "./pages/PagoError";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<MainLayout />}>
-                    <Route index element={<Productos />} />
+                <Route path="/payment-status/pago-exito" element={<PagoExitoView />} />
+                <Route path="/payment-status/pago-error" element={<PagoErrorView />} />
+
+                {/* All other routes that require the MainLayout go here */}
+                <Route element={<MainLayout />}>
+                    <Route path="/" element={<Productos />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="usuario" element={<Usuario />} />
                     <Route path="productos/:id" element={<ProductoDetalle />} />
                     <Route path="carrito" element={<CarritoView />} />
-                    <Route path="pago-resultado" element={<PagoResultado />} />
                     <Route path="pedido/:id" element={<PedidoView />} />
                 </Route>
+
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
     );

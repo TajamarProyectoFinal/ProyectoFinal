@@ -188,13 +188,13 @@ const PedidoView: React.FC = () => {
                     <p className="lead text-center">Haz clic en "Comprar" para proceder al pago seguro con Redsys.</p>
                     <form
                         name="redsysForm"
-                        action={redsysPaymentData.RedsysTpvsUrl}
+                        action={redsysPaymentData.redsysTpvsUrl}
                         method="POST"
                         className="d-grid gap-2"
                     >
-                        <input type="hidden" name="Ds_SignatureVersion" value={redsysPaymentData.Ds_SignatureVersion} />
-                        <input type="hidden" name="Ds_MerchantParameters" value={redsysPaymentData.Ds_MerchantParameters || ''} />
-                        <input type="hidden" name="Ds_Signature" value={redsysPaymentData.Ds_Signature || ''} />
+                        <input type="hidden" name="Ds_SignatureVersion" value={redsysPaymentData.ds_SignatureVersion} />
+                        <input type="hidden" name="Ds_MerchantParameters" value={redsysPaymentData.ds_MerchantParameters || ''} />
+                        <input type="hidden" name="Ds_Signature" value={redsysPaymentData.ds_Signature || ''} />
                         <div className="text-center">
                         </div>
                         <button className="btn btn-warning btn-lg" type="submit"> Comprar </button>

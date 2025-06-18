@@ -76,8 +76,8 @@ namespace NickYMartinApi.Controllers
                 Currency.EUR,
                 redsysOrderId,
                 dsMerchantMerchantUrl,
-                $"{_configuration["Redsys:UrlOk"]}?orderId={pedido.IdPedido}",
-                $"{_configuration["Redsys:UrlKo"]}?orderId={pedido.IdPedido}",
+                $"{_configuration["Redsys:UrlOk"]}/{pedido.IdPedido}",
+                $"{_configuration["Redsys:UrlKo"]}/{pedido.IdPedido}",
                 Language.Spanish
             );
 
