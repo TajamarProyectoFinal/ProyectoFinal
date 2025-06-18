@@ -1,10 +1,13 @@
+// src/layouts/MainLayout.tsx
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCarritoContext } from "../context/CarritoContext";
 import { motion } from "framer-motion";
 
 const MainLayout: React.FC = () => {
     const { user } = useAuth();
     const location = useLocation();
+    const { totalItems } = useCarritoContext();
 
     return (
         <div className="d-flex flex-column min-vh-100">
@@ -36,8 +39,7 @@ const MainLayout: React.FC = () => {
                         <ul className="navbar-nav gap-2">
                             <li className="nav-item">
                                 <Link
-                                    className={`nav-link custom-nav-link ${location.pathname === "/" ? "active" : ""
-                                        }`}
+                                    className={`nav-link custom-nav-link ${location.pathname === "/" ? "active" : ""}`}
                                     to="/"
                                 >
                                     Inicio
@@ -46,13 +48,17 @@ const MainLayout: React.FC = () => {
                         </ul>
 
                         <ul className="navbar-nav gap-2">
-                            <li className="nav-item">
+                            <li className="nav-item position-relative">
                                 <Link
-                                    className={`nav-link custom-nav-link ${location.pathname === "/carrito" ? "active" : ""
-                                        }`}
+                                    className={`nav-link custom-nav-link ${location.pathname === "/carrito" ? "active" : ""}`}
                                     to="/carrito"
                                 >
                                     Carrito
+                                    {totalItems > 0 && (
+                                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {totalItems}
+                                        </span>
+                                    )}
                                 </Link>
                             </li>
 

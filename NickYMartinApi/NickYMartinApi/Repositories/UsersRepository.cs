@@ -40,7 +40,7 @@ namespace NickYMartinApi.Repositories
         public async Task<User?> GetUserByEmailPassword(string email, string password)
         {
 
-            User user = _context.Users.SingleOrDefault(u => u.Email == email);
+            User user = _context.Users.Include(u=> u.Role).SingleOrDefault(u => u.Email == email);
 
             if (user == null) {
                 return null;

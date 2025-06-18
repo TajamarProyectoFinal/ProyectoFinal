@@ -24,6 +24,7 @@ const Usuario: React.FC = () => {
                     <p className="mb-2"><strong>Nombre:</strong> {user.name}</p>
                     <p className="mb-2"><strong>Correo:</strong> {user.email}</p>
                     <p className="mb-3"><strong>Teléfono:</strong> {user.phone}</p>
+                    <p className="mb-3"><strong>Rol:</strong> {user.role}</p>
 
                     <button className="btn btn-logout" onClick={logout}>
                         Cerrar sesión
