@@ -11,23 +11,15 @@ import CarritoView from "./pages/Carrito";
 import PagoResultado from "./pages/PagoResultado";
 import PedidoView from "./pages/Pedido";
 import NotFoundPage from "./pages/NotFoundPage";
+import PagoExitoView from "./pages/PagoExitoView";
+import PagoErrorView from "./pages/PagoError";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/*
-                  IMPORTANT: Keep the Redsys callback route (e.g., /pago-resultado)
-                  OUTSIDE of the MainLayout route if it doesn't need the layout,
-                  or ensure it's handled distinctly.
-
-                  In most Redsys integrations, the callback URL is directly hit by Redsys,
-                  and it often doesn't need the full application layout.
-                  Making it a top-level route prevents it from being confused with
-                  any nested routes.
-                */}
-                <Route path="/payment-status/pago-exito" element={<PagoResultado />} />
-                <Route path="/payment-status/pago-error" element={<PagoResultado />} />
+                <Route path="/payment-status/pago-exito" element={<PagoExitoView />} />
+                <Route path="/payment-status/pago-error" element={<PagoErrorView />} />
 
                 {/* All other routes that require the MainLayout go here */}
                 <Route element={<MainLayout />}>
