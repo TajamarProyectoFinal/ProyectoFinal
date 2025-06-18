@@ -10,6 +10,7 @@ namespace NickYMartinApi.Models
         public Guid IdDireccion { get; set; }
         [ForeignKey(nameof(Usuario))]
         public Guid? IdUsuario { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public virtual User? Usuario { get; set; }
         public string? Domicilio { get; set; }
         public int CodigoPostal { get; set; }

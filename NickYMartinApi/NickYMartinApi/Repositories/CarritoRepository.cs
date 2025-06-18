@@ -37,10 +37,8 @@ namespace NickYMartinApi.Repositories
             bool response = false;
             Carrito? carrito = await GetUserCarrito(userId);
             if (carrito != null) {
-                carrito.ItemsCarrito.Clear();
-                carrito.Total = 0;
+                _context.ItemsCarrito.RemoveRange(carrito.ItemsCarrito);
                 _context.SaveChanges();
-                response = true;
             }
 
             return response;
