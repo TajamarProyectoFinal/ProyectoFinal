@@ -9,6 +9,7 @@ import Usuario from "./pages/Usuario";
 import ProductoDetalle from "./pages/ProductoDetalle";
 import CarritoView from "./pages/Carrito";
 import PagoResultado from "./pages/PagoResultado";
+import PedidoView from "./pages/Pedido";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="productos/:id" element={<ProductoDetalle />} />
                     <Route path="carrito" element={<CarritoView />} />
                     <Route path="pago-resultado" element={<PagoResultado />} />
+                    <Route path="pedido/:id" element={<PedidoView />} />
                 </Route>
             </Routes>
         </BrowserRouter>

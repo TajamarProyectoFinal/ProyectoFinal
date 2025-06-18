@@ -33,7 +33,7 @@ namespace NickYMartinApi.Repositories
 
         public async Task<Pedido?> GetPedido(Guid IdPedido)
         {
-            Pedido? pedido = await _context.Pedidos.Include(p => p.DetallesPedidos).SingleOrDefaultAsync(p => p.IdPedido == IdPedido);
+            Pedido? pedido = await _context.Pedidos.Include(p => p.DetallesPedidos).ThenInclude(p => p.Producto).SingleOrDefaultAsync(p => p.IdPedido == IdPedido);
 
             return pedido;
         }

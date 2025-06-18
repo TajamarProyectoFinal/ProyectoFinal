@@ -319,7 +319,7 @@ namespace NickYMartinApi.Data
             new Pedido
             {
                 IdPedido = Guid.Parse("2f3e4d5c-6b7a-8f9e-0d1c-2b3a4f5e6d7c"),
-                Numero = 1,
+                Numero = "1",
                 IdUsuario = clienteLauraId,
                 IdDireccion = direccionLaura,
                 FechaCreacion = DateTime.Now.AddDays(-1),
@@ -329,7 +329,7 @@ namespace NickYMartinApi.Data
             new Pedido
             {
                 IdPedido = Guid.Parse("d0c1e2f3-a4b5-c6d7-e8f9-a0b1c2d3e4f5"),
-                Numero = 2,
+                Numero = "2",
                 IdUsuario = clienteLauraId,
                 IdDireccion = direccionLaura,
                 FechaCreacion = DateTime.Now.AddDays(-5),
@@ -344,8 +344,8 @@ namespace NickYMartinApi.Data
                 entity.HasData(pedidos);
             });
 
-            var pedido1 = pedidos.First(p => p.Numero == 1 && p.IdUsuario == clienteLauraId);
-            var pedido2 = pedidos.First(p => p.Numero == 2 && p.IdUsuario == clienteLauraId);
+            var pedido1 = pedidos.First(p => p.Numero == "1" && p.IdUsuario == clienteLauraId);
+            var pedido2 = pedidos.First(p => p.Numero == "2" && p.IdUsuario == clienteLauraId);
 
             var camiseta = productos.First(p => p.Nombre == "Camiseta Básica Algodón");
             var pantalon = productos.First(p => p.Nombre == "Pantalón Vaquero Recto");

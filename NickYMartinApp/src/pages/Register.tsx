@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UsersDataSource } from '../services/UsersDataSource';
 import type { UserRegisterDto } from '../types/user';
+import { useNavigate } from 'react-router-dom';
 
 const usersApi = new UsersDataSource("https://localhost:7153/api/Users");
 
@@ -12,7 +13,7 @@ const Register: React.FC = () => {
         password: '',
         confirmPassword: '',
     });
-
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
 
@@ -41,10 +42,7 @@ const Register: React.FC = () => {
                 setError(err);
                 //Mostrar un mensaje de error
             } else if (data) {
-                //TODO
-                //Llevar a login
-                console.log("usuario registrado")
-                console.log("data", data)
+                navigate("/login");
             }
             setLoading(false);
         })

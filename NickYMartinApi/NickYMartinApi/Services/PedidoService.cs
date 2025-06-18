@@ -14,7 +14,7 @@ namespace NickYMartinApi.Services
             _pedidoRepository = pedidoRepository;
         }
 
-        public async Task<bool> AddPedido(Guid userId, Guid direccionId)
+        public async Task<Pedido?> AddPedido(Guid userId, Guid direccionId)
         {
             Carrito? carrito = await _carritoRepository.GetUserCarrito(userId);
 
@@ -51,11 +51,11 @@ namespace NickYMartinApi.Services
                 //Eliminamos items del carrito
                 await _carritoRepository.ClearCarritoItems(userId);
 
-                return true;
+                return pedidoCreado;
             }
             else
             {
-                return false;
+                return null;
             }
 
         }

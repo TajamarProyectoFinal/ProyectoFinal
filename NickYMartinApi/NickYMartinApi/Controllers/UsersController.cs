@@ -51,7 +51,7 @@ namespace NickYMartinApi.Controllers
         {
             Direccion direccionSubida = await _direccionService.AddUserDireccion(direccion);
 
-            return Ok("Se ha añadido la direccion correctamente");
+            return Ok(direccionSubida);
         }
 
         [HttpPost("direcciones")]

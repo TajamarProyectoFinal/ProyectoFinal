@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Method } from "axios";
-import type { Carrito } from "../types/carrito";
+import type { Pedido } from "../types/pedido";
 
 type ApiCallback<T> = (data: T | null, error?: any) => void;
 
@@ -11,28 +11,36 @@ export class PedidosDataSource {
         this.BASE_URL = base_url;
     }
 
-    CreateOrAddItemToCarrito(
+    AddPedido(
         userId: string,
-        idProducto: string,
-        cantidad: number,
-        productoMainImageUrl: string,
-        callback: ApiCallback<string>
+        idDireccion: string,
+        callback: ApiCallback<Pedido>
     ) {
         const formData = new FormData();
         formData.append("userId", userId);
-        formData.append("idProducto", idProducto);
-        formData.append("cantidad", String(cantidad) ?? "0");
-        formData.append("productoMainImageUrl", productoMainImageUrl);
+        formData.append("idDireccion", idDireccion);
 
         const url = `${this.BASE_URL}`;
         this.SendRequest("post", url, callback, formData, { 'Content-Type': 'multipart/form-data' });
     }
 
-    getUserCarrito(
+    GetUserPedidos(
         userId: string,
-        callback: ApiCallback<Carrito>
+        callback: ApiCallback<Pedido[]>
     ) {
-        const url = `${this.BASE_URL}/${userId}`;
+        const params = new URLSearchParams({
+            userId: userId,
+        });
+
+        const url = `${this.BASE_URL}?/${params.toString()}`;
+        this.SendRequest("get", url, callback);
+    }
+
+    PedidoDetalles(
+        idPedido: string,
+        callback: ApiCallback<Pedido>
+    ) {
+        const url = `${this.BASE_URL}/${idPedido}`;
         this.SendRequest("get", url, callback);
     }
 

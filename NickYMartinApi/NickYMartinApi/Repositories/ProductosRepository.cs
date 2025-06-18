@@ -25,6 +25,8 @@ namespace NickYMartinApi.Repositories
 
         public async Task<bool> AddMultimediasProducto(Guid idProducto, List<IFormFile> files)
         {
+            Producto? producto = await _context.Productos.SingleOrDefaultAsync(p => p.IdProducto == idProducto);
+
             bool respuesta = false;
             if(files == null || files.Count() == 0)
             {
@@ -33,10 +35,22 @@ namespace NickYMartinApi.Repositories
 
             try
             {
+                string tipoPrevio = "";
+                int ordenPrevio = 1;
                 int orden = 1;
+                bool updateProducto = false;
                 foreach (IFormFile file in files)
                 {
+                    ordenPrevio = orden;
                     string tipo = GetFileType(file.FileName);
+                    if (tipo != tipoPrevio)
+                    {
+                        orden = 1;
+                    }
+                    else
+                    {
+                        orden = ordenPrevio;
+                    }
 
                     MultimediaProducto prevMultimediaProducto = await _context.MultimediaProductos.OrderByDescending(o => o.Orden).FirstOrDefaultAsync(
                         m => m.IdProducto == idProducto && m.Tipo == tipo
@@ -54,20 +68,38 @@ namespace NickYMartinApi.Repositories
 
                     if (uploadSuccess) 
                     {
+                        string fileUrl = await _blobService.GetPictureUrl(fileName);
                         MultimediaProducto multimediaProducto = new MultimediaProducto()
                         {
                             IdProducto = idProducto,
                             NombreArchivo = fileName,
                             Descripcion = tipo + " " + file.Name,
-                            Url = await _blobService.GetPictureUrl(fileName),
+                            Url = fileUrl,
                             Tipo = tipo,
                             Orden = orden,
                             FechaCreacion = DateTime.Now,
                         };
 
+                        if(tipo == ITiposMultimedia.IMAGEN && orden == 1)
+                        {
+                            producto.MainImagenUrl = fileUrl;
+                            updateProducto = true;
+                        }
+                        else if(tipo == ITiposMultimedia.VIDEO && orden == 1)
+                        {
+                            producto.MainTrailerUrl = fileUrl;
+                            updateProducto = true;
+                        }
+
                         await _context.MultimediaProductos.AddAsync(multimediaProducto);
                         orden++;
                     }
+
+                }
+
+                if (updateProducto)
+                {
+                    _context.Productos.Update(producto);
                 }
 
                 await _context.SaveChangesAsync();
