@@ -25,11 +25,11 @@ export class DireccionDataSource {
     }
 
     async eliminarDireccion(idDireccion: string): Promise<void> {
-        await axios.delete(`${BASE_URL}/direccion`, {
+        await axios.delete(`${BASE_URL}/direccion/${idDireccion}`, {
             headers: this.headers(),
-            data: idDireccion,
         });
     }
+
 
     async actualizarDireccion(direccion: Direccion): Promise<Direccion> {
         const res = await axios.put(`${BASE_URL}/direccion`, direccion, {

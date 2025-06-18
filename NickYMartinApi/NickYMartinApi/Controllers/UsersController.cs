@@ -66,17 +66,19 @@ namespace NickYMartinApi.Controllers
             return Ok("Se ha agregado la lista de direcciones correctamente");
         }
 
-        [HttpDelete("direccion")]
-        public async Task<IActionResult> RemoveUserDireccion([FromBody] Guid IdDireccion)
+        [HttpDelete("direccion/{id}")]
+        public async Task<IActionResult> RemoveUserDireccion(Guid id)
         {
-            bool response = await _direccionService.RemoveUserDireccion(IdDireccion);
+            bool response = await _direccionService.RemoveUserDireccion(id);
 
-            if (!response) {
+            if (!response)
+            {
                 return BadRequest("No se ha podido eliminar la direccion");
             }
 
             return Ok("Se ha eliminado la direccion correctamente");
         }
+
 
         [HttpGet("direcciones")]
         public async Task<IActionResult> GetUserDirecciones(Guid userId)

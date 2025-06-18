@@ -66,7 +66,17 @@ const Direcciones: React.FC = () => {
                             {dir.domicilio}, {dir.ciudad}, {dir.provincia}, {dir.pais} - CP {dir.codigoPostal}
                             {dir.principal && <span className="badge bg-primary ms-2">Principal</span>}
                         </div>
-                        <button className="btn btn-danger btn-sm" onClick={() => eliminarDireccion(dir.idDireccion!)}>Eliminar</button>
+                        <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => {
+                                if (window.confirm("¿Estás seguro de que deseas eliminar esta dirección?")) {
+                                    eliminarDireccion(dir.idDireccion!);
+                                }
+                            }}
+                        >
+                            Eliminar
+                        </button>
+
                     </li>
                 ))}
             </ul>
